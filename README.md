@@ -1,4 +1,8 @@
-# EiToh (এইতো) - 3D Printing & Maker Catalog with CMS & WhatsApp Checkout
+# EiToh (এইতো) — 3D Printing & Maker Catalog with CMS & WhatsApp Checkout
+
+🌐 **Live Website**: [https://amanurrahman101.github.io/eitoh-catalogue/](https://amanurrahman101.github.io/eitoh-catalogue/)  
+📦 **GitHub Repository**: [https://github.com/AmanurRahman101/eitoh-catalogue](https://github.com/AmanurRahman101/eitoh-catalogue)  
+⚙️ **Admin CMS**: [https://amanurrahman101.github.io/eitoh-catalogue/admin.html](https://amanurrahman101.github.io/eitoh-catalogue/admin.html) (Default PIN: `1234`)
 
 A modern, fast, and responsive Product Catalog web application with an integrated Content Management System (CMS) and WhatsApp direct-order checkout, built with pure **HTML5, Vanilla CSS3, and JavaScript (ES6+)**.
 
