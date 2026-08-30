@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EiToh (এইতো) — Precision 3D Printing & Maker Studio</title>
+  <meta name="description" content="Editorial catalog for custom 3D printed creations, articulated dragons, lithophane photo lamps, geometric home decor, and bespoke engineering parts by EiToh.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <aside class="top-announcement" id="topAnnouncement">
+    <span id="announcementText" class="mono-text">✦ Custom 3D Printing & Lithophanes in Bangladesh — Order via WhatsApp</span>
+    <a href="#catalogSection" id="announcementLink">Explore Catalog <i class="fa-solid fa-arrow-down-long"></i></a>
+  </aside>
+
+  <!-- Floating Capsule Header -->
+  <header class="main-header" id="mainHeader">
+    <div class="header-container">
+      
+      <!-- Brand Identity -->
+      <a href="index.html" class="brand-wrapper" title="EiToh Home">
+        <img src="assets/logo.jpg" alt="EiToh Logo" class="brand-logo-img">
+        <div class="brand-text-col">
+          <div class="brand-title">
+            EiToh <span class="bangla-badge bangla-text">এইতো</span>
+          </div>
+          <span class="brand-tagline" id="brandTagline">3D Studio</span>
+        </div>
+      </a>
+
+      <!-- Search Pill -->
+      <div class="header-search-bar">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search creations, dragons, vases..." autocomplete="off">
+          <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <!-- Direct WhatsApp Link -->
+        <a href="#" id="headerWhatsappBtn" target="_blank" rel="noopener" class="btn-header-action btn-cms-link" title="Direct WhatsApp Chat">
+          <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+          <span>WhatsApp</span>
+        </a>
+
+        <!-- CMS Admin Link -->
+        <a href="admin.html" class="btn-header-action btn-cms-link" title="Open CMS">
+          <i class="fa-solid fa-sliders"></i>
+          <span>CMS</span>
+        </a>
+
+        <!-- Cart Trigger Button -->
+        <button type="button" class="btn-header-action btn-cart-trigger" id="cartTriggerBtn" aria-label="Open Shopping Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Cart</span>
+          <span class="cart-badge" id="headerCartCount">0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Editorial Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      
+      <div class="hero-text-col">
+        <div class="hero-meta-badge">
+          <span class="dot"></span> 3D Manufacturing Studio • Dhaka, Bangladesh
+        </div>
+        <h1 class="hero-title">
+          Production <em>Accelerating.</em> Precision Crafted.
+        </h1>
+        <p class="hero-desc">
+          Bespoke articulated dragons, high-density lithophane photo lamps, geometric architecture vases, and functional engineering parts.
+        </p>
+
+        <div class="hero-cta-row">
+          <a href="#catalogSection" class="btn-editorial-dark">
+            <span>Browse All Items</span>
+            <i class="fa-solid fa-arrow-down"></i>
+          </a>
+          <button type="button" class="btn-editorial-ghost" id="btnHeroCustomQuote">
+            <i class="fa-brands fa-whatsapp"></i> Custom Quote
+          </button>
+        </div>
+
+        <div class="hero-spec-grid">
+          <div class="hero-spec-col">
+            <span class="hero-spec-label">Precision Layer</span>
+            <span class="hero-spec-val mono-text">0.12 - 0.20 mm</span>
+          </div>
+          <div class="hero-spec-col">
+            <span class="hero-spec-label">Materials</span>
+            <span class="hero-spec-val mono-text">Silk PLA / PETG</span>
+          </div>
+          <div class="hero-spec-col">
+            <span class="hero-spec-label">Direct Order</span>
+            <span class="hero-spec-val mono-text">+880 1777-547605</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Showcase Card -->
+      <div class="hero-showcase-card">
+        <span class="showcase-featured-tag">Featured 01</span>
+        <div class="showcase-img-wrap">
+          <img src="assets/images/articulated_dragon.jpg" alt="Articulated Dragon" id="heroShowcaseImg">
+        </div>
+        <div class="showcase-info">
+          <h4 id="heroShowcaseTitle">Flexible Articulated Emerald Dragon</h4>
+          <p id="heroShowcaseDesc">Fluid multi-segment joints printed-in-place with iridescent silk sheen.</p>
+          <div class="showcase-footer">
+            <div class="showcase-price" id="heroShowcasePrice">৳ 850</div>
+            <button type="button" class="btn-add-cart" onclick="window.EiTohApp.openQuickView('eitoh-001')">
+              <span>View Specs</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Refined Single-Row Filter & Sort Bar -->
+  <section class="catalog-control-section" id="catalogSection">
+    <div class="catalog-control-container">
+      <div class="catalog-bar-row">
+        
+        <!-- Left: Traditional Filter Button with Dropdown Popover -->
+        <div class="filter-dropdown-wrapper">
+          <button type="button" class="btn-filter-trigger" id="btnFilterTrigger" aria-expanded="false" aria-haspopup="true">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Filter</span>
+            <span class="filter-count-badge" id="filterCountBadge" style="display: none;">0</span>
+            <i class="fa-solid fa-chevron-down chevron-arrow"></i>
+          </button>
+
+          <!-- Active Filter Chips list -->
+          <div class="active-filter-chips-wrap" id="activeFilterChipsWrap"></div>
+
+          <!-- Filter Popover Panel -->
+          <div class="filter-popover-panel" id="filterPopoverPanel" aria-hidden="true">
+            <div class="filter-popover-header">
+              <span class="filter-header-title"><i class="fa-solid fa-filter"></i> Filter Creations</span>
+              <button type="button" class="btn-clear-filters" id="btnClearFilters">Reset</button>
+            </div>
+            
+            <div class="filter-popover-group">
+              <div class="filter-group-title">Categories</div>
+              <div class="filter-category-grid" id="popoverCategoryGrid">
+                <!-- Dynamically populated via js/app.js -->
+              </div>
+            </div>
+
+            <div class="filter-popover-group">
+              <div class="filter-group-title">Tags & Stock</div>
+              <div class="filter-tags-grid" id="popoverTagsGrid">
+                <button type="button" class="popover-tag-chip active" data-tag="all">All Tags</button>
+                <button type="button" class="popover-tag-chip" data-tag="Bestseller">Bestseller</button>
+                <button type="button" class="popover-tag-chip" data-tag="Silk PLA">Silk PLA</button>
+                <button type="button" class="popover-tag-chip" data-tag="Custom Photo">Custom Photo</button>
+                <button type="button" class="popover-tag-chip" data-tag="Desk Setup">Desk Setup</button>
+                <button type="button" class="popover-tag-chip" data-tag="in_stock">In Stock Only</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Items Counter & Sort Dropdown -->
+        <div class="sort-control-wrapper">
+          <span class="active-count-label mono-text" id="productCountLabel">Showing 5 items</span>
+          <div class="sort-select-wrap">
+            <i class="fa-solid fa-arrow-down-short-wide sort-icon"></i>
+            <select id="sortSelect" class="sort-select" aria-label="Sort products">
+              <option value="featured">Best Sellers & Featured</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+              <option value="newest">Newest Additions</option>
+            </select>
+            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Product Grid Catalog -->
+  <main class="catalog-content-section">
+    <div class="product-grid" id="productGrid">
+      <!-- Injected dynamically via app.js -->
+    </div>
+  </main>
+
+  <!-- Atmospheric Dark Nebula Statement Section -->
+  <section class="nebula-section">
+    <div class="nebula-container">
+      <h2 class="nebula-title">
+        The outcome grows <em>ferocious.</em>
+      </h2>
+      <p class="nebula-desc">
+        From bespoke engineering prototypes to personalized warm lithophanes. Have a custom STL or photo? Send it to our studio.
+      </p>
+      <div class="nebula-btn-row">
+        <a href="https://wa.me/8801777547605?text=Hello%20EiToh!%20I%20have%20a%20custom%203D%20print%20inquiry." target="_blank" rel="noopener" class="btn-nebula-white">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+        <a href="admin.html" class="btn-nebula-outline">
+          <i class="fa-solid fa-sliders"></i> Store CMS
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Quick-View Modal -->
+  <div class="modal-overlay" id="quickViewModal" aria-hidden="true">
+    <div class="modal-container" role="dialog" aria-modal="true">
+      <button type="button" class="btn-close-modal" id="btnCloseModal" aria-label="Close product preview">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="modal-grid">
+        <!-- Gallery -->
+        <div class="modal-gallery">
+          <div class="modal-main-img-wrap">
+            <img src="" alt="" id="modalImg">
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="modal-product-info">
+          <span class="modal-category-tag" id="modalCategory">Category</span>
+          <h2 class="modal-title" id="modalTitle">Product Title</h2>
+          <div class="modal-bangla-title bangla-text" id="modalBanglaTitle">বাংলা শিরোনাম</div>
+
+          <div class="modal-price-row">
+            <span class="modal-current-price" id="modalCurrentPrice">৳ 0</span>
+            <span class="modal-orig-price" id="modalOrigPrice"></span>
+          </div>
+
+          <p class="modal-desc" id="modalDesc">Detailed description goes here...</p>
+
+          <!-- Specifications Table -->
+          <table class="modal-specs-table" id="modalSpecsTable"></table>
+
+          <!-- Color / Variant Selector -->
+          <div id="modalVariantContainer">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 6px;">Select Color / Finish:</div>
+            <div class="color-pills-wrap" id="modalColorPills"></div>
+          </div>
+
+          <!-- Actions -->
+          <div class="modal-actions-row">
+            <div class="modal-qty-control">
+              <button type="button" class="btn-qty" id="btnModalDec" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+              <span class="qty-display" id="modalQtyDisplay">1</span>
+              <button type="button" class="btn-qty" id="btnModalInc" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <button type="button" class="btn-modal-add-cart" id="btnModalAddToCart">
+              <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Cart Slide-out Drawer -->
+  <div class="cart-drawer-overlay" id="cartOverlay">
+    <div class="cart-drawer" role="dialog" aria-label="Shopping Cart">
+      
+      <div class="cart-drawer-header">
+        <div class="cart-drawer-title">
+          Shopping Cart
+          <span class="cart-items-count-badge" id="drawerCartCount">0</span>
+        </div>
+        <button type="button" class="btn-close-drawer" id="btnCloseCart" aria-label="Close cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="cart-drawer-body" id="cartDrawerBody">
+        <!-- Injected via app.js -->
+      </div>
+
+      <div class="cart-drawer-footer" id="cartDrawerFooter">
+        <div class="cart-summary-line">
+          <span>Items Subtotal:</span>
+          <span id="cartSubtotal" class="mono-text" style="font-weight: 700;">৳ 0</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Delivery Charge:</span>
+          <span id="cartDeliveryCharge" class="mono-text">৳ 70</span>
+        </div>
+        <div class="cart-summary-total">
+          <span>Total Payable:</span>
+          <span class="total-val" id="cartGrandTotal">৳ 70</span>
+        </div>
+
+        <button type="button" class="btn-whatsapp-checkout" id="btnWhatsappCheckout">
+          <i class="fa-brands fa-whatsapp" style="color: #25D366; font-size: 1.1rem;"></i>
+          <span>Checkout via WhatsApp</span>
+        </button>
+        <p class="whatsapp-note-text">
+          Direct WhatsApp ordering with itemized calculation.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      
+      <div class="footer-brand">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img src="assets/logo.jpg" alt="EiToh Logo" style="width: 36px; height: 36px; border-radius: 50%;">
+          <h3 style="margin-bottom: 0;">EiToh | এইতো</h3>
+        </div>
+        <p>
+          Custom 3D Printing & Maker Studio in Bangladesh. Engineered with precision, high-density layer heights, and smooth silk finishes.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Creations</h4>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-cat-link" data-cat="articulated">Articulated Dragons</a></li>
+          <li><a href="#" class="footer-cat-link" data-cat="lamps">Lithophane Lamps</a></li>
+          <li><a href="#" class="footer-cat-link" data-cat="desk">Desk & Setup Accessories</a></li>
+          <li><a href="#" class="footer-cat-link" data-cat="decor">Home Decor & Vases</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Studio & CMS</h4>
+        <ul class="footer-links">
+          <li><a href="admin.html"><i class="fa-solid fa-sliders"></i> Store CMS Panel</a></li>
+          <li><a href="https://wa.me/8801777547605" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> +880 1777-547605</a></li>
+          <li><a href="javascript:void(0)" onclick="StorageManager.resetToDefaults(); location.reload();"><i class="fa-solid fa-rotate-right"></i> Reset Demo Data</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 EiToh (এইতো). Precision 3D Studio.</span>
+      <span>WhatsApp Order Gateway Active</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

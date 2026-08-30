@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EiToh CMS | Product & Store Management</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Icons & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- PIN Login Overlay (Optional Lock) -->
+  <div class="admin-login-overlay" id="pinOverlay">
+    <div class="login-card">
+      <img src="assets/logo.jpg" alt="EiToh Logo">
+      <h2>EiToh CMS Login</h2>
+      <p>Enter your 4-digit Store Admin PIN to manage products & orders.</p>
+      
+      <form id="pinForm" onsubmit="event.preventDefault(); window.EiTohAdmin.submitPin();">
+        <input type="password" id="pinInput" class="pin-input" placeholder="••••" maxlength="8" autofocus>
+        <button type="submit" class="btn-login">
+          <i class="fa-solid fa-lock-open"></i> Unlock Dashboard
+        </button>
+      </form>
+      <div style="margin-top: 14px; font-size: 0.78rem; color: #94a3b8;">
+        (Default PIN: <strong>1234</strong> — can be changed in settings)
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <img src="assets/logo.jpg" alt="EiToh Logo">
+      <div>
+        <div class="admin-brand-name">EiToh CMS</div>
+        <span class="admin-badge">Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <div class="admin-nav-item active" data-tab="tabProducts">
+        <i class="fa-solid fa-boxes-stacked"></i>
+        <span>Products</span>
+      </div>
+      <div class="admin-nav-item" data-tab="tabCategories">
+        <i class="fa-solid fa-tags"></i>
+        <span>Categories</span>
+      </div>
+      <div class="admin-nav-item" data-tab="tabSettings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Store & WhatsApp</span>
+      </div>
+      <div class="admin-nav-item" data-tab="tabSync">
+        <i class="fa-solid fa-code-compare"></i>
+        <span>Export & AI Sync</span>
+      </div>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="index.html" target="_blank" class="btn-view-store" title="View Customer Storefront">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span>View Store</span>
+      </a>
+      <button type="button" class="btn-view-store" onclick="window.EiTohAdmin.lockSession()" title="Lock Session">
+        <i class="fa-solid fa-lock"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+
+    <!-- Overview Stats Bar -->
+    <div class="admin-stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background: #e8f4f8; color: var(--brand-primary);">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <div class="stat-content">
+          <h5>Total Products</h5>
+          <div class="stat-value" id="statTotalProducts">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background: #ecfdf5; color: #10b981;">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="stat-content">
+          <h5>In Stock</h5>
+          <div class="stat-value" id="statInStock">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background: #fff7ed; color: var(--brand-accent);">
+          <i class="fa-solid fa-tags"></i>
+        </div>
+        <div class="stat-content">
+          <h5>Categories</h5>
+          <div class="stat-value" id="statCategories">0</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap" style="background: #dcfce7; color: #15803d;">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="stat-content">
+          <h5>WhatsApp Checkout</h5>
+          <div class="stat-value" id="statWhatsApp" style="font-size: 1.1rem; line-height: 1.5;">Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         TAB 1: PRODUCTS MANAGER
+         ========================================================================= -->
+    <section class="admin-tab-panel active" id="tabProducts">
+      <div class="admin-header-row">
+        <div>
+          <h1 class="admin-page-title">Products Catalog</h1>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">Manage your 3D models, upload photos, update prices, and stock status.</p>
+        </div>
+        <div class="admin-header-actions">
+          <button type="button" class="btn-primary-action" id="btnOpenAddProduct">
+            <i class="fa-solid fa-plus"></i> Add New Product
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Table Card -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="admin-search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="adminSearchInput" placeholder="Search products...">
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <select id="adminCategoryFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+              <option value="all">All Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Image</th>
+                <th>Product Title</th>
+                <th>Category</th>
+                <th>Price (৳)</th>
+                <th>Status</th>
+                <th>Featured</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsTableBody">
+              <!-- Rendered via js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 2: CATEGORIES MANAGER
+         ========================================================================= -->
+    <section class="admin-tab-panel" id="tabCategories">
+      <div class="admin-header-row">
+        <div>
+          <h1 class="admin-page-title">Category Management</h1>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">Organize your creations with categories, custom icons, and badges.</p>
+        </div>
+        <div class="admin-header-actions">
+          <button type="button" class="btn-primary-action" id="btnOpenAddCategory">
+            <i class="fa-solid fa-folder-plus"></i> Add Category
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Category Name</th>
+                <th>Slug / ID</th>
+                <th>Badge Label</th>
+                <th>Product Count</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminCategoriesTableBody">
+              <!-- Rendered via js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 3: STORE & WHATSAPP SETTINGS
+         ========================================================================= -->
+    <section class="admin-tab-panel" id="tabSettings">
+      <div class="admin-header-row">
+        <div>
+          <h1 class="admin-page-title">Store & WhatsApp Settings</h1>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">Configure your WhatsApp ordering number, store currency, and delivery fees.</p>
+        </div>
+        <div class="admin-header-actions">
+          <button type="button" class="btn-primary-action" id="btnSaveSettings">
+            <i class="fa-solid fa-floppy-disk"></i> Save Settings
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-section-box">
+        <h4><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp Business Configuration</h4>
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>WhatsApp Number (with country code, e.g. 8801712345678) *</label>
+            <input type="text" id="settingWhatsappNumber" class="form-control" placeholder="8801777547605">
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Orders from the catalog cart will be routed directly to this WhatsApp number.</small>
+          </div>
+          <div class="form-field-group">
+            <label>Store Currency Symbol</label>
+            <input type="text" id="settingCurrency" class="form-control" placeholder="৳" value="৳">
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section-box">
+        <h4><i class="fa-solid fa-truck"></i> Delivery Charges & Thresholds</h4>
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Inside Dhaka Delivery Fee (৳)</label>
+            <input type="number" id="settingInsideDelivery" class="form-control" placeholder="70" value="70">
+          </div>
+          <div class="form-field-group">
+            <label>Outside Dhaka Delivery Fee (৳)</label>
+            <input type="number" id="settingOutsideDelivery" class="form-control" placeholder="130" value="130">
+          </div>
+        </div>
+        <div class="form-field-group">
+          <label>Free Delivery Threshold (৳) — (Set 0 to disable)</label>
+          <input type="number" id="settingFreeDeliveryThreshold" class="form-control" placeholder="2500" value="2500">
+        </div>
+      </div>
+
+      <div class="settings-section-box">
+        <h4><i class="fa-solid fa-bullhorn"></i> Branding & Security</h4>
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Store Name</label>
+            <input type="text" id="settingStoreName" class="form-control" placeholder="EiToh | এইতো">
+          </div>
+          <div class="form-field-group">
+            <label>Store Tagline</label>
+            <input type="text" id="settingTagline" class="form-control" placeholder="Custom 3D Printing, Prototyping & Maker Crafts">
+          </div>
+        </div>
+        <div class="form-field-group">
+          <label>Top Announcement Text</label>
+          <input type="text" id="settingAnnouncement" class="form-control" placeholder="✨ Custom 3D Printing & Lithophanes available! Message us on WhatsApp for bespoke orders.">
+        </div>
+        <div class="form-field-group" style="max-width: 300px;">
+          <label>Admin Dashboard PIN</label>
+          <input type="password" id="settingAdminPin" class="form-control" placeholder="1234">
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 4: EXPORT / IMPORT / AI AGENT SYNC
+         ========================================================================= -->
+    <section class="admin-tab-panel" id="tabSync">
+      <div class="admin-header-row">
+        <div>
+          <h1 class="admin-page-title">Export, Backup & AI Sync</h1>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">Easily export your catalogue data, back it up to JSON, or copy it to sync with AI agents and source code files.</p>
+        </div>
+      </div>
+
+      <div class="settings-section-box">
+        <h4><i class="fa-solid fa-robot"></i> AI Agent & Source Code Sync</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Any products and settings added via this CMS are stored in your browser's local database. Click below to copy the JSON format if you'd like an AI agent or developer to permanently save it to <code>data/products.json</code> in the codebase.
+        </p>
+        <button type="button" class="btn-primary-action" id="btnCopyJson">
+          <i class="fa-solid fa-copy"></i> Copy Full JSON to Clipboard
+        </button>
+        <div class="json-sync-box" id="jsonPreviewBox">// JSON will appear here</div>
+      </div>
+
+      <div class="settings-section-box">
+        <h4><i class="fa-solid fa-file-arrow-down"></i> Backup & Restore File</h4>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <button type="button" class="btn-primary-action" id="btnDownloadJson" style="background: #0f172a;">
+            <i class="fa-solid fa-download"></i> Download Backup (products.json)
+          </button>
+          
+          <label class="btn-primary-action" style="background: var(--brand-accent); cursor: pointer;">
+            <i class="fa-solid fa-upload"></i> Restore from JSON File
+            <input type="file" id="importJsonFileInput" accept=".json" style="display: none;">
+          </label>
+          
+          <button type="button" class="btn-primary-action" id="btnResetDefaults" style="background: #ef4444; margin-left: auto;">
+            <i class="fa-solid fa-triangle-exclamation"></i> Reset to Factory Demo Data
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       PRODUCT ADD / EDIT MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="productModal" aria-hidden="true">
+    <div class="product-modal-dialog">
+      <button type="button" class="btn-close-modal" id="btnCloseProductModal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="productModalHeading" style="font-family: var(--font-heading); margin-bottom: 20px;">Add New Product</h2>
+
+      <form id="productForm">
+        <input type="hidden" id="editProductId">
+
+        <!-- Photo Upload / URL -->
+        <div class="form-field-group">
+          <label><i class="fa-solid fa-image"></i> Product Images (Upload File or Enter URL)</label>
+          
+          <div class="image-upload-box" id="imageDropzone">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--brand-primary); margin-bottom: 8px;"></i>
+            <p style="font-size: 0.9rem; font-weight: 600; color: var(--text-main); margin-bottom: 4px;">Drag & Drop product photos here, or click to browse</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted);">Supports JPG, PNG, WEBP. Optimized automatically.</p>
+            <input type="file" id="productImageFileInput" accept="image/*" multiple style="display: none;">
+          </div>
+
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+            <input type="text" id="productImageUrlInput" class="form-control" placeholder="Or paste image URL (e.g. assets/images/... or https://...)">
+            <button type="button" class="btn-add-cart" id="btnAddImageUrl" style="white-space: nowrap;">
+              <i class="fa-solid fa-plus"></i> Add URL
+            </button>
+          </div>
+
+          <!-- Preview Thumbnails Strip -->
+          <div class="image-preview-strip" id="productImagePreviewStrip"></div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Product Title (English) *</label>
+            <input type="text" id="prodTitle" class="form-control" placeholder="e.g. Articulated Crystal Dragon" required>
+          </div>
+          <div class="form-field-group">
+            <label>Bangla Title (বাংলা নাম)</label>
+            <input type="text" id="prodBanglaTitle" class="form-control bangla-text" placeholder="যেমন: ক্রিস্টাল ড্রাগন">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Category *</label>
+            <select id="prodCategory" class="form-control" required>
+              <!-- Dynamic options -->
+            </select>
+          </div>
+          <div class="form-field-group">
+            <label>Stock Status *</label>
+            <select id="prodStockStatus" class="form-control" required>
+              <option value="in_stock">In Stock (Ready to Ship)</option>
+              <option value="made_to_order">Made to Order (24-48h Print)</option>
+              <option value="out_of_stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Selling Price (৳) *</label>
+            <input type="number" id="prodPrice" class="form-control" placeholder="850" required>
+          </div>
+          <div class="form-field-group">
+            <label>Original / Strikethrough Price (৳)</label>
+            <input type="number" id="prodOriginalPrice" class="form-control" placeholder="1100">
+          </div>
+        </div>
+
+        <div class="form-field-group">
+          <label>Short Catchy Summary (Shown on product cards)</label>
+          <input type="text" id="prodShortDesc" class="form-control" placeholder="Hyper-flexible articulated multi-segment dragon...">
+        </div>
+
+        <div class="form-field-group">
+          <label>Full Product Description</label>
+          <textarea id="prodDesc" class="form-control" rows="3" placeholder="Detailed product craftsmanship, print quality, and usage details..."></textarea>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-field-group">
+            <label>Tags (Comma separated)</label>
+            <input type="text" id="prodTags" class="form-control" placeholder="Silk PLA, Articulated, Bestseller">
+          </div>
+          <div class="form-field-group">
+            <label>Available Colors / Variants (Comma separated)</label>
+            <input type="text" id="prodColors" class="form-control" placeholder="Emerald Green, Silk Gold, Stealth Black">
+          </div>
+        </div>
+
+        <div class="form-field-group">
+          <label>3D Print Specifications (Optional)</label>
+          <div class="form-grid-2">
+            <input type="text" id="prodSpecMaterial" class="form-control" placeholder="Material: e.g. Silk PLA">
+            <input type="text" id="prodSpecDimensions" class="form-control" placeholder="Dimensions: e.g. 45 cm length">
+            <input type="text" id="prodSpecPrintTime" class="form-control" placeholder="Print Time: e.g. 14 Hours">
+            <input type="text" id="prodSpecInfill" class="form-control" placeholder="Infill / Finish: e.g. 20% Gyroid">
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin: 16px 0;">
+          <input type="checkbox" id="prodFeatured" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="prodFeatured" style="font-weight: 700; cursor: pointer;">Feature this creation on the Hero section & Top of Catalog</label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button type="button" class="btn-add-cart" id="btnCancelProductModal" style="background: #f1f5f9; color: var(--text-main);">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary-action">
+            <i class="fa-solid fa-floppy-disk"></i> Save Product
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
