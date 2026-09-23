@@ -1,0 +1,29 @@
+{
+  "name": "eitoh-catalogue",
+  "version": "2.0.0",
+  "description": "EiToh Studio - 3D Printing & Lithophanes Full-Stack E-Commerce & CMS",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "migrate": "node server/migrate.js",
+    "test": "node scratch/test_api.js"
+  },
+  "keywords": [
+    "3d-printing",
+    "ecommerce",
+    "cms",
+    "mysql",
+    "express"
+  ],
+  "author": "EiToh Studio",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.9.7"
+  }
+}

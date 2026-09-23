@@ -10,12 +10,42 @@
     "announcement": "✨ Custom 3D Printing & Lithophanes available! Message us on WhatsApp for bespoke orders."
   },
   "categories": [
-    { "id": "all", "name": "All Creations", "icon": "fa-cubes", "badge": "All" },
-    { "id": "articulated", "name": "Articulated & Dragons", "icon": "fa-dragon", "badge": "Popular" },
-    { "id": "desk", "name": "Desk & Gaming Setup", "icon": "fa-desktop", "badge": "Setup" },
-    { "id": "decor", "name": "Home Decor & Vases", "icon": "fa-spa", "badge": "Decor" },
-    { "id": "lamps", "name": "Lithophane & Lamps", "icon": "fa-lightbulb", "badge": "Gift" },
-    { "id": "fidget", "name": "Fidgets & Mechanical", "icon": "fa-gears", "badge": "Play" }
+    {
+      "id": "all",
+      "name": "All Creations",
+      "icon": "fa-cubes",
+      "badge": "All"
+    },
+    {
+      "id": "articulated",
+      "name": "Articulated & Dragons",
+      "icon": "fa-dragon",
+      "badge": "Popular"
+    },
+    {
+      "id": "desk",
+      "name": "Desk & Gaming Setup",
+      "icon": "fa-desktop",
+      "badge": "Setup"
+    },
+    {
+      "id": "decor",
+      "name": "Home Decor & Vases",
+      "icon": "fa-spa",
+      "badge": "Decor"
+    },
+    {
+      "id": "lamps",
+      "name": "Lithophane & Lamps",
+      "icon": "fa-lightbulb",
+      "badge": "Gift"
+    },
+    {
+      "id": "fidget",
+      "name": "Fidgets & Mechanical",
+      "icon": "fa-gears",
+      "badge": "Play"
+    }
   ],
   "products": [
     {
@@ -25,10 +55,17 @@
       "category": "articulated",
       "price": 850,
       "originalPrice": 1100,
-      "images": ["assets/images/articulated_dragon.jpg"],
+      "images": [
+        "assets/images/articulated_dragon.jpg"
+      ],
       "shortDescription": "Hyper-flexible multi-segment dragon printed with high-grade silk PLA.",
       "description": "Experience fluid, mesmerizing movement with our signature Articulated Emerald Dragon. Every joint is printed-in-place with 0.16mm precision for smooth flexibility and sharp spine details. Perfect as a desk companion or collector display piece.",
-      "tags": ["Silk PLA", "Articulated", "Green", "Bestseller"],
+      "tags": [
+        "Silk PLA",
+        "Articulated",
+        "Green",
+        "Bestseller"
+      ],
       "stockStatus": "in_stock",
       "featured": true,
       "specs": {
@@ -38,7 +75,13 @@
         "printTime": "14 Hours",
         "infill": "20% Gyroid"
       },
-      "colors": ["Emerald Green", "Silk Gold", "Galaxy Black", "Ruby Red", "Rainbow Silk"],
+      "colors": [
+        "Emerald Green",
+        "Silk Gold",
+        "Galaxy Black",
+        "Ruby Red",
+        "Rainbow Silk"
+      ],
       "rating": 4.9,
       "reviewsCount": 38
     },
@@ -49,10 +92,17 @@
       "category": "decor",
       "price": 650,
       "originalPrice": 850,
-      "images": ["assets/images/geometric_vase.jpg"],
+      "images": [
+        "assets/images/geometric_vase.jpg"
+      ],
       "shortDescription": "Minimalist architectural low-poly vase for dry flowers and aesthetic spaces.",
       "description": "Add modern architectural elegance to your workspace or living room with our faceted polygon vase. Designed with waterproof interior coating option and clean geometric reflections.",
-      "tags": ["Low-Poly", "Matte Slate", "Home Decor", "Minimalist"],
+      "tags": [
+        "Low-Poly",
+        "Matte Slate",
+        "Home Decor",
+        "Minimalist"
+      ],
       "stockStatus": "in_stock",
       "featured": true,
       "specs": {
@@ -62,7 +112,12 @@
         "finish": "Satin Matte Smooth",
         "waterproof": "Dry flora recommended / Waterproof liner available"
       },
-      "colors": ["Slate Charcoal", "Nordic White", "Terracotta Sand", "Marble Grey"],
+      "colors": [
+        "Slate Charcoal",
+        "Nordic White",
+        "Terracotta Sand",
+        "Marble Grey"
+      ],
       "rating": 4.8,
       "reviewsCount": 24
     },
@@ -73,10 +128,17 @@
       "category": "desk",
       "price": 950,
       "originalPrice": 1250,
-      "images": ["assets/images/headphone_stand.jpg"],
+      "images": [
+        "assets/images/headphone_stand.jpg"
+      ],
       "shortDescription": "Heavy-duty headset cradle with integrated cable channel and anti-slip feet.",
       "description": "Engineered for gamers and audiophiles. Features a wide curved cradle that distributes headband weight without leaving indentations, plus a weighted base and back cable organizer hook.",
-      "tags": ["Desk Setup", "Gaming", "PETG", "Cable Management"],
+      "tags": [
+        "Desk Setup",
+        "Gaming",
+        "PETG",
+        "Cable Management"
+      ],
       "stockStatus": "in_stock",
       "featured": true,
       "specs": {
@@ -86,7 +148,12 @@
         "loadCapacity": "Up to 3kg",
         "cableClip": "Built-in"
       },
-      "colors": ["Stealth Black", "Cyber Cyan", "Gunmetal Grey", "Arctic White"],
+      "colors": [
+        "Stealth Black",
+        "Cyber Cyan",
+        "Gunmetal Grey",
+        "Arctic White"
+      ],
       "rating": 5.0,
       "reviewsCount": 42
     },
@@ -97,10 +164,17 @@
       "category": "lamps",
       "price": 1450,
       "originalPrice": 1800,
-      "images": ["assets/images/lithophane_lamp.jpg"],
+      "images": [
+        "assets/images/lithophane_lamp.jpg"
+      ],
       "shortDescription": "Turn your favorite photo into an illuminated 3D relief night lamp with warm LED base.",
       "description": "Send us your memorable photo on WhatsApp after ordering, and we will 3D sculpt it into a curved high-density lithophane. When switched on, the light reveals rich shades and lifelike photo details. Includes solid base, warm LED, and USB cable.",
-      "tags": ["Custom Photo", "Lithophane", "Gift", "LED Lamp"],
+      "tags": [
+        "Custom Photo",
+        "Lithophane",
+        "Gift",
+        "LED Lamp"
+      ],
       "stockStatus": "made_to_order",
       "featured": true,
       "specs": {
@@ -109,7 +183,11 @@
         "lightSource": "Warm White USB LED (5V)",
         "turnaround": "24-48 Hours"
       },
-      "colors": ["Warm White Base", "Dark Walnut Finish", "Natural Maple"],
+      "colors": [
+        "Warm White Base",
+        "Dark Walnut Finish",
+        "Natural Maple"
+      ],
       "rating": 5.0,
       "reviewsCount": 57
     },
@@ -120,10 +198,17 @@
       "category": "fidget",
       "price": 480,
       "originalPrice": 650,
-      "images": ["assets/images/fidget_cube.jpg"],
+      "images": [
+        "assets/images/fidget_cube.jpg"
+      ],
       "shortDescription": "Smooth-spinning mechanical gears on all 6 faces for stress relief and focus.",
       "description": "An addictive desk fidget gadget with synchronized planetary gear systems. Each side spins smoothly with satisfying tactile feedback. Printed in vibrant multi-color filament.",
-      "tags": ["Fidget", "Mechanical", "Multi-Color", "Desk Toy"],
+      "tags": [
+        "Fidget",
+        "Mechanical",
+        "Multi-Color",
+        "Desk Toy"
+      ],
       "stockStatus": "in_stock",
       "featured": false,
       "specs": {
@@ -132,9 +217,36 @@
         "bearings": "High Precision Steel Pins",
         "weight": "115g"
       },
-      "colors": ["Multi-Color Cyber", "Black & Gold", "Pastel Rainbow", "Mono Slate"],
+      "colors": [
+        "Multi-Color Cyber",
+        "Black & Gold",
+        "Pastel Rainbow",
+        "Mono Slate"
+      ],
       "rating": 4.7,
       "reviewsCount": 19
+    }
+  ],
+  "orders": [],
+  "customQuotes": [],
+  "coupons": [
+    {
+      "id": "coupon-default-1",
+      "code": "EITOHFIRST",
+      "type": "percentage",
+      "value": 10,
+      "minSpend": 500,
+      "active": true,
+      "description": "10% off your first 3D print order"
+    },
+    {
+      "id": "coupon-default-2",
+      "code": "MAKER50",
+      "type": "fixed",
+      "value": 50,
+      "minSpend": 300,
+      "active": true,
+      "description": "৳50 off for maker enthusiasts"
     }
   ]
 }
