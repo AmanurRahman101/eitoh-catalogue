@@ -36,7 +36,7 @@ const DEFAULT_STORE_DATA = {
       originalPrice: 1100,
       images: ["assets/images/articulated_dragon.jpg"],
       shortDescription: "Hyper-flexible multi-segment dragon printed with high-grade silk PLA.",
-      description: "Experience fluid, mesmerizing movement with our signature Articulated Emerald Dragon. Every joint is printed-in-place with 0.16mm precision for smooth flexibility and sharp spine details. Perfect as a desk companion or collector display piece.",
+      description: "Experience fluid, mesmerizing movement with our signature Articulated Emerald Dragon. Every joint is printed-in-place with 0.16mm precision for smooth flexibility and sharp spine details.",
       tags: ["Silk PLA", "Articulated", "Green", "Bestseller"],
       stockStatus: "in_stock",
       featured: true,
@@ -47,103 +47,9 @@ const DEFAULT_STORE_DATA = {
         "printTime": "14 Hours",
         "infill": "20% Gyroid"
       },
-      colors: ["Emerald Green", "Silk Gold", "Galaxy Black", "Ruby Red", "Rainbow Silk"],
+      colors: ["Emerald Green", "Silk Gold", "Galaxy Black", "Ruby Red"],
       rating: 4.9,
       reviewsCount: 38
-    },
-    {
-      id: "eitoh-002",
-      title: "Geometric Low-Poly Modern Vase",
-      banglaTitle: "মডার্ন জিওমেট্রিক পলিগন ফুলদানি",
-      category: "decor",
-      price: 650,
-      originalPrice: 850,
-      images: ["assets/images/geometric_vase.jpg"],
-      shortDescription: "Minimalist architectural low-poly vase for dry flowers and aesthetic spaces.",
-      description: "Add modern architectural elegance to your workspace or living room with our faceted polygon vase. Designed with waterproof interior coating option and clean geometric reflections.",
-      tags: ["Low-Poly", "Matte Slate", "Home Decor", "Minimalist"],
-      stockStatus: "in_stock",
-      featured: true,
-      specs: {
-        "material": "Matte PLA+",
-        "dimensions": "10cm x 10cm x 22cm",
-        "weight": "190g",
-        "finish": "Satin Matte Smooth",
-        "waterproof": "Dry flora recommended / Waterproof liner available"
-      },
-      colors: ["Slate Charcoal", "Nordic White", "Terracotta Sand", "Marble Grey"],
-      rating: 4.8,
-      reviewsCount: 24
-    },
-    {
-      id: "eitoh-003",
-      title: "Cyberpunk Ergonomic Headphone Stand",
-      banglaTitle: "সাইবারপাংক হেডফোন স্ট্যান্ড",
-      category: "desk",
-      price: 950,
-      originalPrice: 1250,
-      images: ["assets/images/headphone_stand.jpg"],
-      shortDescription: "Heavy-duty headset cradle with integrated cable channel and anti-slip feet.",
-      description: "Engineered for gamers and audiophiles. Features a wide curved cradle that distributes headband weight without leaving indentations, plus a weighted base and back cable organizer hook.",
-      tags: ["Desk Setup", "Gaming", "PETG", "Cable Management"],
-      stockStatus: "in_stock",
-      featured: true,
-      specs: {
-        "material": "Reinforced Carbon PETG",
-        "height": "26 cm",
-        "baseWidth": "14 cm",
-        "loadCapacity": "Up to 3kg",
-        "cableClip": "Built-in"
-      },
-      colors: ["Stealth Black", "Cyber Cyan", "Gunmetal Grey", "Arctic White"],
-      rating: 5.0,
-      reviewsCount: 42
-    },
-    {
-      id: "eitoh-004",
-      title: "Custom 3D Lithophane Memory Night Lamp",
-      banglaTitle: "কাস্টম লিথোফেন ফটো নাইট ল্যাম্প",
-      category: "lamps",
-      price: 1450,
-      originalPrice: 1800,
-      images: ["assets/images/lithophane_lamp.jpg"],
-      shortDescription: "Turn your favorite photo into an illuminated 3D relief night lamp with warm LED base.",
-      description: "Send us your memorable photo on WhatsApp after ordering, and we will 3D sculpt it into a curved high-density lithophane. When switched on, the light reveals rich shades and lifelike photo details. Includes solid base, warm LED, and USB cable.",
-      tags: ["Custom Photo", "Lithophane", "Gift", "LED Lamp"],
-      stockStatus: "made_to_order",
-      featured: true,
-      specs: {
-        "material": "High-Detail White PLA + Wood Base",
-        "curvedArc": "16cm x 12cm",
-        "lightSource": "Warm White USB LED (5V)",
-        "turnaround": "24-48 Hours"
-      },
-      colors: ["Warm White Base", "Dark Walnut Finish", "Natural Maple"],
-      rating: 5.0,
-      reviewsCount: 57
-    },
-    {
-      id: "eitoh-005",
-      title: "Precision Interlocking Gear Fidget Cube",
-      banglaTitle: "মেকানিক্যাল গিয়ার ফিজেট কিউব",
-      category: "fidget",
-      price: 480,
-      originalPrice: 650,
-      images: ["assets/images/fidget_cube.jpg"],
-      shortDescription: "Smooth-spinning mechanical gears on all 6 faces for stress relief and focus.",
-      description: "An addictive desk fidget gadget with synchronized planetary gear systems. Each side spins smoothly with satisfying tactile feedback. Printed in vibrant multi-color filament.",
-      tags: ["Fidget", "Mechanical", "Multi-Color", "Desk Toy"],
-      stockStatus: "in_stock",
-      featured: false,
-      specs: {
-        "material": "Multi-Color PLA / PETG Gears",
-        "cubeSize": "60mm x 60mm x 60mm",
-        "bearings": "High Precision Steel Pins",
-        "weight": "115g"
-      },
-      colors: ["Multi-Color Cyber", "Black & Gold", "Pastel Rainbow", "Mono Slate"],
-      rating: 4.7,
-      reviewsCount: 19
     }
   ],
   orders: [],
@@ -459,17 +365,38 @@ class StorageManager {
   }
 
   static async syncWithBackend() {
-    if (!window.EiTohAPI || !window.EiTohAPI.products) return;
-    try {
-      const res = await window.EiTohAPI.products.getAll();
-      if (res && res.products && res.products.length > 0) {
-        const data = this.getStoreData();
-        data.products = res.products;
-        this.saveStoreData(data);
+    // 1. Live MySQL REST API
+    if (window.EiTohAPI && window.EiTohAPI.products) {
+      try {
+        const res = await window.EiTohAPI.products.getAll();
+        if (res && res.products && res.products.length > 0) {
+          const data = this.getStoreData();
+          data.products = res.products;
+          this.saveStoreData(data);
+          return res.products;
+        }
+      } catch (err) {
+        // Fallback to static products.json
       }
-    } catch (err) {
-      console.warn('Backend products sync fallback to local cache:', err.message);
     }
+
+    // 2. Fallback to static products.json
+    try {
+      const res = await fetch('data/products.json');
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.products && json.products.length > 0) {
+          const data = this.getStoreData();
+          data.products = json.products;
+          if (json.categories) data.categories = json.categories;
+          this.saveStoreData(data);
+          return json.products;
+        }
+      }
+    } catch (e) {
+      console.warn('Fallback products.json error:', e);
+    }
+    return this.getProducts();
   }
 
   static saveOrder(orderData) {

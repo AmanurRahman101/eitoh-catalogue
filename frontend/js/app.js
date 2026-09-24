@@ -71,6 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
     headerWhatsappBtn: document.getElementById('headerWhatsappBtn'),
     footerWhatsappLink: document.getElementById('footerWhatsappLink'),
 
+    // Modern Navbar & Mobile Drawer References
+    headerNavLinks: document.getElementById('headerNavLinks'),
+    navCustomLink: document.getElementById('navCustomLink'),
+    btnStudioTools: document.getElementById('btnStudioTools'),
+    studioDropdownMenu: document.getElementById('studioDropdownMenu'),
+    btnMobileNavToggle: document.getElementById('btnMobileNavToggle'),
+    mobileNavOverlay: document.getElementById('mobileNavOverlay'),
+    btnCloseMobileNav: document.getElementById('btnCloseMobileNav'),
+    mobileSearchInput: document.getElementById('mobileSearchInput'),
+    mobileLinkCatalog: document.getElementById('mobileLinkCatalog'),
+    mobileLinkEstimator: document.getElementById('mobileLinkEstimator'),
+    mobileLinkTracker: document.getElementById('mobileLinkTracker'),
+    mobileLinkWishlist: document.getElementById('mobileLinkWishlist'),
+    mobileWhatsappLink: document.getElementById('mobileWhatsappLink'),
+    mobileThemeToggleBtn: document.getElementById('mobileThemeToggleBtn'),
+
     // Hero
     heroShowcaseImg: document.getElementById('heroShowcaseImg'),
     heroShowcaseTitle: document.getElementById('heroShowcaseTitle'),
@@ -196,6 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initEstimator();
     bindEvents();
 
+    // Dynamically synchronize products with backend MySQL / static json
+    if (StorageManager.syncWithBackend) {
+      StorageManager.syncWithBackend().then(() => {
+        renderCategories();
+        renderProducts();
+      });
+    }
+
     // Listen for storage events (e.g. admin updates in another tab)
     window.addEventListener('storage', (e) => {
       if (e.key === 'eitoh_catalogue_data') {
@@ -264,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const waUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent("Hello EiToh! I'm interested in custom 3D printing & orders.")}`;
     if (elements.headerWhatsappBtn) elements.headerWhatsappBtn.href = waUrl;
     if (elements.footerWhatsappLink) elements.footerWhatsappLink.href = waUrl;
+    if (elements.mobileWhatsappLink) elements.mobileWhatsappLink.href = waUrl;
   }
 
   // =========================================================================
@@ -1575,6 +1600,127 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.themeToggleBtn) {
       elements.themeToggleBtn.addEventListener('click', toggleTheme);
     }
+
+    // Studio Tools Dropdown Toggle
+    if (elements.btnStudioTools) {
+      elements.btnStudioTools.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = elements.studioDropdownMenu?.classList.toggle('open');
+        elements.btnStudioTools.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (elements.studioDropdownMenu?.classList.contains('open') && !elements.btnStudioTools.contains(e.target)) {
+          elements.studioDropdownMenu.classList.remove('open');
+          elements.btnStudioTools.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // Mobile Navigation Slide-Over Handlers
+    function openMobileNav() {
+      if (elements.mobileNavOverlay) {
+        elements.mobileNavOverlay.classList.add('open');
+        elements.mobileNavOverlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+      if (elements.btnMobileNavToggle) {
+        elements.btnMobileNavToggle.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function closeMobileNav() {
+      if (elements.mobileNavOverlay) {
+        elements.mobileNavOverlay.classList.remove('open');
+        elements.mobileNavOverlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+      if (elements.btnMobileNavToggle) {
+        elements.btnMobileNavToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    if (elements.btnMobileNavToggle) {
+      elements.btnMobileNavToggle.addEventListener('click', openMobileNav);
+    }
+    if (elements.btnCloseMobileNav) {
+      elements.btnCloseMobileNav.addEventListener('click', closeMobileNav);
+    }
+    if (elements.mobileNavOverlay) {
+      elements.mobileNavOverlay.addEventListener('click', (e) => {
+        if (e.target === elements.mobileNavOverlay) closeMobileNav();
+      });
+    }
+
+    // Mobile Drawer Navigation Item Actions
+    if (elements.mobileLinkCatalog) {
+      elements.mobileLinkCatalog.addEventListener('click', () => closeMobileNav());
+    }
+    if (elements.mobileLinkEstimator) {
+      elements.mobileLinkEstimator.addEventListener('click', () => closeMobileNav());
+    }
+    if (elements.mobileLinkTracker) {
+      elements.mobileLinkTracker.addEventListener('click', () => {
+        closeMobileNav();
+        openOrderTracker();
+      });
+    }
+    if (elements.mobileLinkWishlist) {
+      elements.mobileLinkWishlist.addEventListener('click', () => {
+        closeMobileNav();
+        openWishlistModal();
+      });
+    }
+    if (elements.mobileThemeToggleBtn) {
+      elements.mobileThemeToggleBtn.addEventListener('click', () => {
+        toggleTheme();
+      });
+    }
+    if (elements.mobileSearchInput) {
+      elements.mobileSearchInput.addEventListener('input', debounce((e) => {
+        state.searchQuery = e.target.value;
+        if (elements.searchInput) elements.searchInput.value = e.target.value;
+        if (elements.searchClearBtn) elements.searchClearBtn.style.display = state.searchQuery ? 'block' : 'none';
+        renderProducts();
+      }, 150));
+    }
+
+    // Custom Nav Link Scroll & Select
+    if (elements.navCustomLink) {
+      elements.navCustomLink.addEventListener('click', () => {
+        const customCat = StorageManager.getCategories().find(c => c.id === 'fidget' || c.id === 'lamps');
+        if (customCat) {
+          state.selectedCategory = customCat.id;
+          renderCategories();
+          renderActiveFilterChips();
+          renderProducts();
+        }
+      });
+    }
+
+    // Nav Links ScrollSpy Indicator
+    const navAnchors = document.querySelectorAll('.header-nav-link');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY + 140;
+      const catalogEl = document.getElementById('catalogSection');
+      const estimatorEl = document.getElementById('estimatorSection');
+
+      let activeId = '';
+      if (estimatorEl && scrollY >= estimatorEl.offsetTop && scrollY < estimatorEl.offsetTop + estimatorEl.offsetHeight) {
+        activeId = 'estimatorSection';
+      } else if (catalogEl && scrollY >= catalogEl.offsetTop) {
+        activeId = 'catalogSection';
+      }
+
+      navAnchors.forEach(a => {
+        const href = a.getAttribute('href') || '';
+        if (activeId && href.includes(activeId)) {
+          a.classList.add('active');
+        } else if (activeId) {
+          a.classList.remove('active');
+        }
+      });
+    }, { passive: true });
 
     // Live Search with Debounce
     if (elements.searchInput) {

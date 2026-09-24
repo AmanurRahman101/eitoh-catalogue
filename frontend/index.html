@@ -30,9 +30,7 @@
 
   <!-- Top Announcement Bar -->
   <aside class="top-announcement" id="topAnnouncement">
-    <span id="announcementText" class="mono-text">✦ Custom 3D Printing & Lithophanes in Bangladesh — Order via
-      WhatsApp</span>
-    <a href="#catalogSection" id="announcementLink">Explore Catalog <i class="fa-solid fa-arrow-down-long"></i></a>
+    <span id="announcementText" class="mono-text">✦ Precision 3D Printing & Custom Maker Studio — Fast Nationwide Delivery in Bangladesh</span>
   </aside>
 
   <!-- Floating Capsule Header -->
@@ -50,8 +48,21 @@
         </div>
       </a>
 
+      <!-- Desktop Nav Links -->
+      <nav class="header-nav-links" id="headerNavLinks" aria-label="Main Navigation">
+        <a href="#catalogSection" class="header-nav-link active">
+          <i class="fa-solid fa-cubes"></i> <span>Catalog</span>
+        </a>
+        <a href="#estimatorSection" class="header-nav-link">
+          <i class="fa-solid fa-calculator"></i> <span>Estimator</span>
+        </a>
+        <a href="#catalogSection" class="header-nav-link" id="navCustomLink">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Custom</span>
+        </a>
+      </nav>
+
       <!-- Search Pill -->
-      <div class="header-search-bar">
+      <div class="header-search-bar" id="headerSearchBar">
         <div class="search-input-wrapper">
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="text" id="searchInput" class="search-input" placeholder="Search creations, dragons, vases..."
@@ -65,37 +76,48 @@
       <!-- Action Buttons -->
       <div class="header-actions">
         <!-- Theme Toggle -->
-        <button type="button" class="btn-header-action" id="themeToggleBtn" title="Toggle Dark Mode"
+        <button type="button" class="btn-header-action btn-icon-only" id="themeToggleBtn" title="Toggle Dark Mode"
           aria-label="Toggle dark/light theme">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
 
         <!-- Order Tracker -->
-        <button type="button" class="btn-header-action" id="btnOpenTracker" title="Track Your Order"
+        <button type="button" class="btn-header-action hide-tablet" id="btnOpenTracker" title="Track Your Order"
           aria-label="Track order">
           <i class="fa-solid fa-route"></i>
           <span class="hide-mobile">Track</span>
         </button>
 
         <!-- Wishlist -->
-        <button type="button" class="btn-header-action" id="btnOpenWishlist" title="Saved Items"
+        <button type="button" class="btn-header-action btn-icon-only" id="btnOpenWishlist" title="Saved Items"
           aria-label="Open wishlist">
           <i class="fa-regular fa-heart"></i>
           <span class="wishlist-count-badge" id="wishlistCount" style="display:none;">0</span>
         </button>
 
-        <!-- Direct WhatsApp Link -->
-        <a href="#" id="headerWhatsappBtn" target="_blank" rel="noopener" class="btn-header-action btn-cms-link"
-          title="Direct WhatsApp Chat">
-          <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
-          <span class="hide-mobile">WhatsApp</span>
-        </a>
-
-        <!-- CMS Admin Link -->
-        <a href="admin.html" class="btn-header-action btn-cms-link hide-mobile" title="Open CMS">
-          <i class="fa-solid fa-sliders"></i>
-          <span>CMS</span>
-        </a>
+        <!-- Consolidated Studio Tools Dropdown (WhatsApp & CMS) -->
+        <div class="studio-dropdown-wrapper" id="studioDropdownWrap">
+          <button type="button" class="btn-header-action btn-icon-only" id="btnStudioTools" title="Studio Links & CMS"
+            aria-label="Studio menu" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div class="studio-dropdown-menu" id="studioDropdownMenu" aria-hidden="true">
+            <a href="#" id="headerWhatsappBtn" target="_blank" rel="noopener" class="studio-menu-item">
+              <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+              <div class="studio-menu-item-text">
+                <strong>WhatsApp Desk</strong>
+                <span>Direct inquiry & support</span>
+              </div>
+            </a>
+            <a href="admin.html" class="studio-menu-item">
+              <i class="fa-solid fa-sliders" style="color: var(--brand-accent);"></i>
+              <div class="studio-menu-item-text">
+                <strong>Studio CMS Hub</strong>
+                <span>Orders & inventory control</span>
+              </div>
+            </a>
+          </div>
+        </div>
 
         <!-- User Authentication & Account Menu -->
         <div id="authNavContainer"></div>
@@ -107,10 +129,82 @@
           <span class="hide-mobile">Cart</span>
           <span class="cart-badge" id="headerCartCount">0</span>
         </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button type="button" class="btn-header-action btn-icon-only btn-mobile-menu" id="btnMobileNavToggle"
+          aria-label="Open navigation menu" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer / Slide-Over -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true">
+    <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+      <div class="mobile-nav-header">
+        <div class="brand-wrapper">
+          <img src="assets/logo.jpg" alt="EiToh Logo" class="brand-logo-img">
+          <div class="brand-text-col">
+            <div class="brand-title">EiToh <span class="bangla-badge bangla-text">এইতো</span></div>
+            <span class="brand-tagline">3D Studio</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-mobile-nav" id="btnCloseMobileNav" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="mobile-nav-body">
+        <!-- Quick Search -->
+        <div class="mobile-search-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="mobileSearchInput" placeholder="Search creations, dragons, vases..." autocomplete="off">
+        </div>
+
+        <!-- Primary Nav Links -->
+        <div class="mobile-nav-group">
+          <div class="mobile-group-title">EXPLORE CREATIONS</div>
+          <a href="#catalogSection" class="mobile-nav-link" id="mobileLinkCatalog">
+            <i class="fa-solid fa-cubes"></i>
+            <span>All Creations Catalog</span>
+          </a>
+          <a href="#estimatorSection" class="mobile-nav-link" id="mobileLinkEstimator">
+            <i class="fa-solid fa-calculator"></i>
+            <span>3D Print Cost Estimator</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkTracker">
+            <i class="fa-solid fa-route"></i>
+            <span>Track Order Pipeline</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkWishlist">
+            <i class="fa-regular fa-heart"></i>
+            <span>Saved Wishlist Items</span>
+          </a>
+        </div>
+
+        <!-- Studio & Admin -->
+        <div class="mobile-nav-group">
+          <div class="mobile-group-title">STUDIO & SUPPORT</div>
+          <a href="#" id="mobileWhatsappLink" target="_blank" rel="noopener" class="mobile-nav-link">
+            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+            <span>WhatsApp Direct Desk</span>
+          </a>
+          <a href="admin.html" class="mobile-nav-link">
+            <i class="fa-solid fa-sliders" style="color: var(--brand-accent);"></i>
+            <span>Admin Management Studio</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mobile-nav-footer">
+        <button type="button" class="btn-mobile-theme-toggle" id="mobileThemeToggleBtn">
+          <i class="fa-solid fa-moon"></i> <span>Toggle Theme</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Editorial Hero Section -->
   <section class="hero-section">
