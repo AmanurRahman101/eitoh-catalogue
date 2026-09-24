@@ -58,12 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Header & Announcement
     topAnnouncement: document.getElementById('topAnnouncement'),
     announcementText: document.getElementById('announcementText'),
-    brandTagline: document.getElementById('brandTagline'),
+    btnDismissAnnouncement: document.getElementById('btnDismissAnnouncement'),
+    mainHeader: document.getElementById('mainHeader'),
     searchInput: document.getElementById('searchInput'),
     searchClearBtn: document.getElementById('searchClearBtn'),
     themeToggleBtn: document.getElementById('themeToggleBtn'),
     themeIcon: document.getElementById('themeIcon'),
-    btnOpenTracker: document.getElementById('btnOpenTracker'),
     btnOpenWishlist: document.getElementById('btnOpenWishlist'),
     wishlistCount: document.getElementById('wishlistCount'),
     headerCartCount: document.getElementById('headerCartCount'),
@@ -71,21 +71,23 @@ document.addEventListener('DOMContentLoaded', () => {
     headerWhatsappBtn: document.getElementById('headerWhatsappBtn'),
     footerWhatsappLink: document.getElementById('footerWhatsappLink'),
 
-    // Modern Navbar & Mobile Drawer References
+    // Modern Navbar References
     headerNavLinks: document.getElementById('headerNavLinks'),
-    navCustomLink: document.getElementById('navCustomLink'),
-    btnStudioTools: document.getElementById('btnStudioTools'),
-    studioDropdownMenu: document.getElementById('studioDropdownMenu'),
+    shopDropdownWrap: document.getElementById('shopDropdownWrap'),
+    btnShopDropdown: document.getElementById('btnShopDropdown'),
+    shopDropdownMenu: document.getElementById('shopDropdownMenu'),
+    navEstimatorLink: document.getElementById('navEstimatorLink'),
+    navCustomQuoteBtn: document.getElementById('navCustomQuoteBtn'),
+
+    // Mobile Drawer References
     btnMobileNavToggle: document.getElementById('btnMobileNavToggle'),
     mobileNavOverlay: document.getElementById('mobileNavOverlay'),
+    mobileNavDrawer: document.getElementById('mobileNavDrawer'),
     btnCloseMobileNav: document.getElementById('btnCloseMobileNav'),
     mobileSearchInput: document.getElementById('mobileSearchInput'),
-    mobileLinkCatalog: document.getElementById('mobileLinkCatalog'),
     mobileLinkEstimator: document.getElementById('mobileLinkEstimator'),
+    mobileLinkCustomQuote: document.getElementById('mobileLinkCustomQuote'),
     mobileLinkTracker: document.getElementById('mobileLinkTracker'),
-    mobileLinkWishlist: document.getElementById('mobileLinkWishlist'),
-    mobileWhatsappLink: document.getElementById('mobileWhatsappLink'),
-    mobileThemeToggleBtn: document.getElementById('mobileThemeToggleBtn'),
 
     // Hero
     heroShowcaseImg: document.getElementById('heroShowcaseImg'),
@@ -277,11 +279,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   function loadSettings() {
     const settings = StorageManager.getSettings();
-    if (elements.announcementText && settings.announcement) {
-      elements.announcementText.innerHTML = `✦ ${E(settings.announcement)}`;
-    }
-    if (elements.brandTagline && settings.tagline) {
-      elements.brandTagline.textContent = settings.tagline;
+    if (elements.announcementText) {
+      if (settings.announcement && !settings.announcement.includes('WhatsApp for bespoke')) {
+        elements.announcementText.innerHTML = settings.announcement;
+      } else {
+        elements.announcementText.innerHTML = `⚡ <strong>24–48h Delivery across Dhaka</strong> • Free shipping on orders over ৳1,500 • Instant Quotes`;
+      }
     }
 
     const cleanNumber = (settings.whatsappNumber || '8801777547605').replace(/[^0-9]/g, '');
@@ -749,7 +752,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
     // Header badge
-    if (elements.headerCartCount) elements.headerCartCount.textContent = totalCount;
+    if (elements.headerCartCount) {
+      elements.headerCartCount.textContent = totalCount;
+      elements.headerCartCount.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+    }
     if (elements.drawerCartCount) elements.drawerCartCount.textContent = totalCount;
 
     // Cart Items Rendering
@@ -1596,24 +1602,77 @@ document.addEventListener('DOMContentLoaded', () => {
   // EVENT BINDINGS
   // =========================================================================
   function bindEvents() {
-    // Theme Toggle
+    // Dismissible Announcement Bar
+    if (sessionStorage.getItem('eitoh_announcement_dismissed') === 'true') {
+      if (elements.topAnnouncement) elements.topAnnouncement.style.display = 'none';
+    }
+    if (elements.btnDismissAnnouncement) {
+      elements.btnDismissAnnouncement.addEventListener('click', () => {
+        if (elements.topAnnouncement) {
+          elements.topAnnouncement.style.opacity = '0';
+          setTimeout(() => {
+            elements.topAnnouncement.style.display = 'none';
+          }, 200);
+        }
+        sessionStorage.setItem('eitoh_announcement_dismissed', 'true');
+      });
+    }
+
+    // Sticky Nav Scroll Shrink
+    window.addEventListener('scroll', () => {
+      if (elements.mainHeader) {
+        if (window.scrollY > 20) {
+          elements.mainHeader.classList.add('scrolled');
+        } else {
+          elements.mainHeader.classList.remove('scrolled');
+        }
+      }
+    }, { passive: true });
+
+    // Standalone Theme Toggle
     if (elements.themeToggleBtn) {
       elements.themeToggleBtn.addEventListener('click', toggleTheme);
     }
 
-    // Studio Tools Dropdown Toggle
-    if (elements.btnStudioTools) {
-      elements.btnStudioTools.addEventListener('click', (e) => {
+    // Shop Category Dropdown Toggle
+    if (elements.btnShopDropdown) {
+      elements.btnShopDropdown.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = elements.studioDropdownMenu?.classList.toggle('open');
-        elements.btnStudioTools.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        const isOpen = elements.shopDropdownWrap?.classList.toggle('open');
+        elements.btnShopDropdown.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       });
 
       document.addEventListener('click', (e) => {
-        if (elements.studioDropdownMenu?.classList.contains('open') && !elements.btnStudioTools.contains(e.target)) {
-          elements.studioDropdownMenu.classList.remove('open');
-          elements.btnStudioTools.setAttribute('aria-expanded', 'false');
+        if (elements.shopDropdownWrap?.classList.contains('open') && !elements.shopDropdownWrap.contains(e.target)) {
+          elements.shopDropdownWrap.classList.remove('open');
+          elements.btnShopDropdown.setAttribute('aria-expanded', 'false');
         }
+      });
+    }
+
+    // Shop Dropdown Category Selection
+    document.querySelectorAll('.shop-menu-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const cat = item.getAttribute('data-cat');
+        if (cat) {
+          state.selectedCategory = cat;
+          renderCategories();
+          renderActiveFilterChips();
+          renderProducts();
+          if (elements.shopDropdownWrap) {
+            elements.shopDropdownWrap.classList.remove('open');
+            elements.btnShopDropdown?.setAttribute('aria-expanded', 'false');
+          }
+        }
+      });
+    });
+
+    // Custom Quote in Header Nav
+    if (elements.navCustomQuoteBtn) {
+      elements.navCustomQuoteBtn.addEventListener('click', () => {
+        const phone = StorageManager.getSettings().whatsappNumber || '8801777547605';
+        const msg = encodeURIComponent("Hello EiToh Studio! I'm interested in getting a bespoke 3D print quote.");
+        window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${msg}`, '_blank');
       });
     }
 
@@ -1652,28 +1711,35 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Mobile Drawer Navigation Item Actions
-    if (elements.mobileLinkCatalog) {
-      elements.mobileLinkCatalog.addEventListener('click', () => closeMobileNav());
-    }
+    // Mobile Drawer Category Links
+    document.querySelectorAll('.mobile-nav-drawer .mobile-nav-link[data-cat]').forEach(link => {
+      link.addEventListener('click', () => {
+        const cat = link.getAttribute('data-cat');
+        if (cat) {
+          state.selectedCategory = cat;
+          renderCategories();
+          renderActiveFilterChips();
+          renderProducts();
+          closeMobileNav();
+        }
+      });
+    });
+
     if (elements.mobileLinkEstimator) {
       elements.mobileLinkEstimator.addEventListener('click', () => closeMobileNav());
+    }
+    if (elements.mobileLinkCustomQuote) {
+      elements.mobileLinkCustomQuote.addEventListener('click', () => {
+        closeMobileNav();
+        const phone = StorageManager.getSettings().whatsappNumber || '8801777547605';
+        const msg = encodeURIComponent("Hello EiToh Studio! I'm interested in getting a bespoke 3D print quote.");
+        window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${msg}`, '_blank');
+      });
     }
     if (elements.mobileLinkTracker) {
       elements.mobileLinkTracker.addEventListener('click', () => {
         closeMobileNav();
         openOrderTracker();
-      });
-    }
-    if (elements.mobileLinkWishlist) {
-      elements.mobileLinkWishlist.addEventListener('click', () => {
-        closeMobileNav();
-        openWishlistModal();
-      });
-    }
-    if (elements.mobileThemeToggleBtn) {
-      elements.mobileThemeToggleBtn.addEventListener('click', () => {
-        toggleTheme();
       });
     }
     if (elements.mobileSearchInput) {
@@ -1685,21 +1751,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 150));
     }
 
-    // Custom Nav Link Scroll & Select
-    if (elements.navCustomLink) {
-      elements.navCustomLink.addEventListener('click', () => {
-        const customCat = StorageManager.getCategories().find(c => c.id === 'fidget' || c.id === 'lamps');
-        if (customCat) {
-          state.selectedCategory = customCat.id;
-          renderCategories();
-          renderActiveFilterChips();
-          renderProducts();
-        }
-      });
-    }
-
-    // Nav Links ScrollSpy Indicator
-    const navAnchors = document.querySelectorAll('.header-nav-link');
+    // Nav Links ScrollSpy Indicator (Shop & Estimator)
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY + 140;
       const catalogEl = document.getElementById('catalogSection');
@@ -1712,14 +1764,20 @@ document.addEventListener('DOMContentLoaded', () => {
         activeId = 'catalogSection';
       }
 
-      navAnchors.forEach(a => {
-        const href = a.getAttribute('href') || '';
-        if (activeId && href.includes(activeId)) {
-          a.classList.add('active');
-        } else if (activeId) {
-          a.classList.remove('active');
+      if (elements.btnShopDropdown) {
+        if (activeId === 'catalogSection') {
+          elements.btnShopDropdown.classList.add('active');
+        } else {
+          elements.btnShopDropdown.classList.remove('active');
         }
-      });
+      }
+      if (elements.navEstimatorLink) {
+        if (activeId === 'estimatorSection') {
+          elements.navEstimatorLink.classList.add('active');
+        } else {
+          elements.navEstimatorLink.classList.remove('active');
+        }
+      }
     }, { passive: true });
 
     // Live Search with Debounce

@@ -28,180 +28,221 @@
   <!-- Screen Reader Live Region (Accessibility) -->
   <div aria-live="polite" id="srAnnouncer" class="sr-only" role="status"></div>
 
-  <!-- Top Announcement Bar -->
-  <aside class="top-announcement" id="topAnnouncement">
-    <span id="announcementText" class="mono-text">✦ Precision 3D Printing & Custom Maker Studio — Fast Nationwide Delivery in Bangladesh</span>
+  <!-- Top Announcement Bar (Dismissible & Informative) -->
+  <aside class="top-announcement" id="topAnnouncement" role="region" aria-label="Store announcement">
+    <div class="announcement-inner">
+      <a href="#estimatorSection" class="announcement-link" id="announcementLink">
+        <span class="announcement-badge">STUDIO INFO</span>
+        <span class="announcement-message" id="announcementText">
+          ⚡ <strong>24–48h Delivery across Dhaka</strong> • Free shipping on orders over ৳1,500 • Instant Quotes
+        </span>
+        <i class="fa-solid fa-arrow-right announcement-arrow" aria-hidden="true"></i>
+      </a>
+      <button type="button" class="announcement-close-btn" id="btnDismissAnnouncement" aria-label="Dismiss announcement" title="Dismiss announcement">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
   </aside>
 
   <!-- Floating Capsule Header -->
   <header class="main-header" id="mainHeader">
     <div class="header-container">
 
-      <!-- Brand Identity -->
-      <a href="index.html" class="brand-wrapper" title="EiToh Home">
+      <!-- Brand Identity (Simplified Lockup, Matching Footer) -->
+      <a href="index.html" class="brand-wrapper" title="EiToh Home" aria-label="EiToh Studio Homepage">
         <img src="assets/logo.jpg" alt="EiToh Logo" class="brand-logo-img">
-        <div class="brand-text-col">
-          <div class="brand-title">
-            EiToh <span class="bangla-badge bangla-text">এইতো</span>
-          </div>
-          <span class="brand-tagline" id="brandTagline">3D Studio</span>
+        <div class="brand-title-lockup">
+          <span class="brand-name">EiToh</span>
+          <span class="brand-divider">|</span>
+          <span class="bangla-title">এইতো</span>
         </div>
       </a>
 
-      <!-- Desktop Nav Links -->
+      <!-- Desktop Nav Links (Shop ▾, Estimator, Custom Quote) -->
       <nav class="header-nav-links" id="headerNavLinks" aria-label="Main Navigation">
-        <a href="#catalogSection" class="header-nav-link active">
-          <i class="fa-solid fa-cubes"></i> <span>Catalog</span>
+        <!-- Shop Dropdown -->
+        <div class="nav-dropdown-wrapper" id="shopDropdownWrap">
+          <button type="button" class="header-nav-link nav-dropdown-btn" id="btnShopDropdown"
+            aria-haspopup="true" aria-expanded="false" aria-controls="shopDropdownMenu">
+            <span>Shop</span>
+            <i class="fa-solid fa-chevron-down nav-chevron" aria-hidden="true"></i>
+          </button>
+          <div class="nav-dropdown-menu" id="shopDropdownMenu" role="menu" aria-hidden="true">
+            <a href="#catalogSection" class="shop-menu-item" data-cat="all" role="menuitem">
+              <i class="fa-solid fa-cubes"></i>
+              <div class="shop-menu-text">
+                <strong>All Creations</strong>
+                <span>Explore complete catalogue</span>
+              </div>
+            </a>
+            <a href="#catalogSection" class="shop-menu-item" data-cat="articulated" role="menuitem">
+              <i class="fa-solid fa-dragon"></i>
+              <div class="shop-menu-text">
+                <strong>Articulated Dragons</strong>
+                <span>Flexible printed-in-place beasts</span>
+              </div>
+            </a>
+            <a href="#catalogSection" class="shop-menu-item" data-cat="lamps" role="menuitem">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div class="shop-menu-text">
+                <strong>Lithophane Lamps</strong>
+                <span>High-density photo lamps</span>
+              </div>
+            </a>
+            <a href="#catalogSection" class="shop-menu-item" data-cat="desk" role="menuitem">
+              <i class="fa-solid fa-laptop-code"></i>
+              <div class="shop-menu-text">
+                <strong>Desk & Setup</strong>
+                <span>Headphone stands & accessories</span>
+              </div>
+            </a>
+            <a href="#catalogSection" class="shop-menu-item" data-cat="decor" role="menuitem">
+              <i class="fa-solid fa-shapes"></i>
+              <div class="shop-menu-text">
+                <strong>Decor & Vases</strong>
+                <span>Geometric architecture pieces</span>
+              </div>
+            </a>
+            <a href="#catalogSection" class="shop-menu-item" data-cat="fidget" role="menuitem">
+              <i class="fa-solid fa-gear"></i>
+              <div class="shop-menu-text">
+                <strong>Fidgets & Crafts</strong>
+                <span>Sensory gears & tactile items</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Estimator -->
+        <a href="#estimatorSection" class="header-nav-link" id="navEstimatorLink">
+          <span>Estimator</span>
         </a>
-        <a href="#estimatorSection" class="header-nav-link">
-          <i class="fa-solid fa-calculator"></i> <span>Estimator</span>
-        </a>
-        <a href="#catalogSection" class="header-nav-link" id="navCustomLink">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Custom</span>
-        </a>
+
+        <!-- Custom Quote -->
+        <button type="button" class="header-nav-link btn-nav-quote" id="navCustomQuoteBtn">
+          <span>Custom Quote</span>
+        </button>
       </nav>
 
-      <!-- Search Pill -->
+      <!-- Search Pill (Shortened Placeholder) -->
       <div class="header-search-bar" id="headerSearchBar">
         <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search creations, dragons, vases..."
-            autocomplete="off">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search creations…"
+            autocomplete="off" aria-label="Search creations">
           <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear search">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons with Visual Hierarchy -->
       <div class="header-actions">
-        <!-- Theme Toggle -->
-        <button type="button" class="btn-header-action btn-icon-only" id="themeToggleBtn" title="Toggle Dark Mode"
-          aria-label="Toggle dark/light theme">
-          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        <!-- Standalone Dark/Light Theme Toggle -->
+        <button type="button" class="btn-header-action btn-icon-only" id="themeToggleBtn"
+          title="Toggle Dark / Light Theme" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon" id="themeIcon" aria-hidden="true"></i>
         </button>
 
-        <!-- Order Tracker -->
-        <button type="button" class="btn-header-action hide-tablet" id="btnOpenTracker" title="Track Your Order"
-          aria-label="Track order">
-          <i class="fa-solid fa-route"></i>
-          <span class="hide-mobile">Track</span>
+        <!-- Saved Wishlist (Corner Floating Badge) -->
+        <button type="button" class="btn-header-action btn-icon-only btn-badge-wrap" id="btnOpenWishlist"
+          title="Saved Items" aria-label="Saved items wishlist">
+          <i class="fa-regular fa-heart" aria-hidden="true"></i>
+          <span class="nav-badge-pill" id="wishlistCount" style="display:none;">0</span>
         </button>
 
-        <!-- Wishlist -->
-        <button type="button" class="btn-header-action btn-icon-only" id="btnOpenWishlist" title="Saved Items"
-          aria-label="Open wishlist">
-          <i class="fa-regular fa-heart"></i>
-          <span class="wishlist-count-badge" id="wishlistCount" style="display:none;">0</span>
-        </button>
-
-        <!-- Consolidated Studio Tools Dropdown (WhatsApp & CMS) -->
-        <div class="studio-dropdown-wrapper" id="studioDropdownWrap">
-          <button type="button" class="btn-header-action btn-icon-only" id="btnStudioTools" title="Studio Links & CMS"
-            aria-label="Studio menu" aria-haspopup="true" aria-expanded="false">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-          </button>
-          <div class="studio-dropdown-menu" id="studioDropdownMenu" aria-hidden="true">
-            <a href="#" id="headerWhatsappBtn" target="_blank" rel="noopener" class="studio-menu-item">
-              <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
-              <div class="studio-menu-item-text">
-                <strong>WhatsApp Desk</strong>
-                <span>Direct inquiry & support</span>
-              </div>
-            </a>
-            <a href="admin.html" class="studio-menu-item">
-              <i class="fa-solid fa-sliders" style="color: var(--brand-accent);"></i>
-              <div class="studio-menu-item-text">
-                <strong>Studio CMS Hub</strong>
-                <span>Orders & inventory control</span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- User Authentication & Account Menu -->
+        <!-- User Authentication & Account Menu (👤 Icon with Dropdown) -->
         <div id="authNavContainer"></div>
 
-        <!-- Cart Trigger Button -->
-        <button type="button" class="btn-header-action btn-cart-trigger" id="cartTriggerBtn"
-          aria-label="Open Shopping Cart">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <span class="hide-mobile">Cart</span>
-          <span class="cart-badge" id="headerCartCount">0</span>
+        <!-- Cart Trigger Button (Consistent Floating Corner Badge) -->
+        <button type="button" class="btn-header-action btn-icon-only btn-badge-wrap" id="cartTriggerBtn"
+          title="Shopping Cart" aria-label="Shopping Cart">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          <span class="nav-badge-pill" id="headerCartCount">0</span>
         </button>
 
-        <!-- Mobile Menu Toggle Button -->
+        <!-- Primary High-Contrast Filled WhatsApp CTA -->
+        <a href="https://wa.me/8801777547605?text=Hello%20EiToh%20Studio!%20I%20would%20like%20to%20place%20an%20order."
+          id="headerWhatsappBtn" target="_blank" rel="noopener" class="btn-nav-whatsapp"
+          title="Order via WhatsApp" aria-label="Order via WhatsApp">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          <span>WhatsApp</span>
+        </a>
+
+        <!-- Mobile Drawer Toggle Button -->
         <button type="button" class="btn-header-action btn-icon-only btn-mobile-menu" id="btnMobileNavToggle"
-          aria-label="Open navigation menu" aria-expanded="false">
-          <i class="fa-solid fa-bars"></i>
+          aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNavDrawer">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
         </button>
       </div>
 
     </div>
   </header>
 
-  <!-- Mobile Navigation Drawer / Slide-Over -->
+  <!-- Mobile Slide-Over Drawer & Overlay -->
   <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true">
     <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
       <div class="mobile-nav-header">
-        <div class="brand-wrapper">
-          <img src="assets/logo.jpg" alt="EiToh Logo" class="brand-logo-img">
-          <div class="brand-text-col">
-            <div class="brand-title">EiToh <span class="bangla-badge bangla-text">এইতো</span></div>
-            <span class="brand-tagline">3D Studio</span>
-          </div>
+        <div class="brand-title-lockup">
+          <span class="brand-name">EiToh</span>
+          <span class="brand-divider">|</span>
+          <span class="bangla-title">এইতো</span>
         </div>
-        <button type="button" class="btn-close-mobile-nav" id="btnCloseMobileNav" aria-label="Close menu">
+        <button type="button" class="btn-close-mobile-nav" id="btnCloseMobileNav" aria-label="Close navigation menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <div class="mobile-nav-body">
-        <!-- Quick Search -->
+        <!-- Mobile Search Input -->
         <div class="mobile-search-wrapper">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="mobileSearchInput" placeholder="Search creations, dragons, vases..." autocomplete="off">
+          <input type="text" id="mobileSearchInput" placeholder="Search creations…" aria-label="Search creations">
         </div>
 
-        <!-- Primary Nav Links -->
+        <!-- Categories & Navigation -->
         <div class="mobile-nav-group">
-          <div class="mobile-group-title">EXPLORE CREATIONS</div>
-          <a href="#catalogSection" class="mobile-nav-link" id="mobileLinkCatalog">
-            <i class="fa-solid fa-cubes"></i>
-            <span>All Creations Catalog</span>
+          <span class="mobile-group-title">Shop by Category</span>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="all">
+            <i class="fa-solid fa-cubes"></i> <span>All Creations</span>
           </a>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="articulated">
+            <i class="fa-solid fa-dragon"></i> <span>Articulated Dragons</span>
+          </a>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="lamps">
+            <i class="fa-solid fa-lightbulb"></i> <span>Lithophane Lamps</span>
+          </a>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="desk">
+            <i class="fa-solid fa-laptop-code"></i> <span>Desk & Setup Accessories</span>
+          </a>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="decor">
+            <i class="fa-solid fa-shapes"></i> <span>Home Decor & Vases</span>
+          </a>
+          <a href="#catalogSection" class="mobile-nav-link" data-cat="fidget">
+            <i class="fa-solid fa-gear"></i> <span>Fidgets & Spinners</span>
+          </a>
+        </div>
+
+        <div class="mobile-nav-group">
+          <span class="mobile-group-title">Services</span>
           <a href="#estimatorSection" class="mobile-nav-link" id="mobileLinkEstimator">
-            <i class="fa-solid fa-calculator"></i>
-            <span>3D Print Cost Estimator</span>
+            <i class="fa-solid fa-calculator"></i> <span>3D Print Estimator</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkCustomQuote">
+            <i class="fa-solid fa-pen-ruler"></i> <span>Bespoke Custom Quote</span>
           </a>
           <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkTracker">
-            <i class="fa-solid fa-route"></i>
-            <span>Track Order Pipeline</span>
-          </a>
-          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkWishlist">
-            <i class="fa-regular fa-heart"></i>
-            <span>Saved Wishlist Items</span>
-          </a>
-        </div>
-
-        <!-- Studio & Admin -->
-        <div class="mobile-nav-group">
-          <div class="mobile-group-title">STUDIO & SUPPORT</div>
-          <a href="#" id="mobileWhatsappLink" target="_blank" rel="noopener" class="mobile-nav-link">
-            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
-            <span>WhatsApp Direct Desk</span>
-          </a>
-          <a href="admin.html" class="mobile-nav-link">
-            <i class="fa-solid fa-sliders" style="color: var(--brand-accent);"></i>
-            <span>Admin Management Studio</span>
+            <i class="fa-solid fa-route"></i> <span>Track Your Order</span>
           </a>
         </div>
       </div>
 
       <div class="mobile-nav-footer">
-        <button type="button" class="btn-mobile-theme-toggle" id="mobileThemeToggleBtn">
-          <i class="fa-solid fa-moon"></i> <span>Toggle Theme</span>
-        </button>
+        <a href="https://wa.me/8801777547605?text=Hello%20EiToh%20Studio!%20I%20would%20like%20to%20place%20an%20order."
+          target="_blank" rel="noopener" class="btn-mobile-whatsapp-cta">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Order via WhatsApp</span>
+        </a>
       </div>
     </div>
   </div>
@@ -899,7 +940,6 @@
         <ul class="footer-links">
           <li><a href="#estimatorSection"><i class="fa-solid fa-calculator"></i> 3D Print Estimator</a></li>
           <li><a href="javascript:void(0)" onclick="window.EiTohApp.openOrderTracker()"><i class="fa-solid fa-route"></i> Track Your Order</a></li>
-          <li><a href="admin.html"><i class="fa-solid fa-sliders"></i> Store CMS Panel</a></li>
           <li><a href="https://wa.me/8801777547605" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i>
               +880 1777-547605</a></li>
         </ul>

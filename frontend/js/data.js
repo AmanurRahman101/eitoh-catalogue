@@ -15,7 +15,7 @@ const DEFAULT_STORE_DATA = {
     pickupAvailable: true,
     pickupAddress: "Mirpur DOHS, Dhaka, Bangladesh",
     freeDeliveryThreshold: 2500,
-    announcement: "✨ Custom 3D Printing & Lithophanes available! Message us on WhatsApp for bespoke orders.",
+    announcement: "⚡ <strong>Express 24–48h Delivery across Dhaka</strong> • Free shipping on orders over ৳1,500",
     adminPin: "1234" // Default admin PIN, easily changeable in CMS
   },
   categories: [
@@ -638,7 +638,12 @@ class StorageManager {
 
   // =================== THEME PERSISTENCE ===================
   static getTheme() {
-    return localStorage.getItem('eitoh_theme') || 'light';
+    const saved = localStorage.getItem('eitoh_theme');
+    if (saved) return saved;
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
   }
 
   static setTheme(mode) {

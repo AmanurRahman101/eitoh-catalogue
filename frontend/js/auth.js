@@ -39,22 +39,72 @@
 
     if (!currentUser) {
       container.innerHTML = `
-        <button type="button" class="btn-header-action btn-auth-trigger" id="btnOpenAuthModal" title="Sign In or Register">
-          <i class="fa-regular fa-user"></i>
-          <span class="auth-btn-text">Sign In</span>
-        </button>
+        <div class="user-menu-wrapper" id="guestMenuWrapper">
+          <button type="button" class="btn-header-action btn-icon-only" id="guestMenuBtn" aria-label="Account & Orders" aria-haspopup="true" aria-expanded="false" title="Account & Orders">
+            <i class="fa-regular fa-user"></i>
+          </button>
+          <div class="user-dropdown" id="guestDropdown" style="display: none;">
+            <div class="user-dropdown-header">
+              <div class="dropdown-name">Welcome to EiToh</div>
+              <div class="dropdown-email">Sign in to track orders & fast checkout</div>
+            </div>
+            <div class="user-dropdown-body">
+              <button type="button" class="dropdown-item" id="navSignInBtn">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span>Sign In</span>
+              </button>
+              <button type="button" class="dropdown-item" id="navRegisterBtn">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Create Account</span>
+              </button>
+              <button type="button" class="dropdown-item" id="navGuestTrackBtn">
+                <i class="fa-solid fa-route"></i>
+                <span>Track Your Order</span>
+              </button>
+            </div>
+          </div>
+        </div>
       `;
-      document.getElementById('btnOpenAuthModal')?.addEventListener('click', () => openAuthModal('signin'));
+
+      const guestBtn = document.getElementById('guestMenuBtn');
+      const guestMenu = document.getElementById('guestDropdown');
+
+      guestBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = guestMenu.style.display === 'block';
+        guestMenu.style.display = isOpen ? 'none' : 'block';
+        guestBtn.setAttribute('aria-expanded', !isOpen);
+      });
+
+      document.addEventListener('click', () => {
+        if (guestMenu) {
+          guestMenu.style.display = 'none';
+          guestBtn?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.getElementById('navSignInBtn')?.addEventListener('click', () => {
+        if (guestMenu) guestMenu.style.display = 'none';
+        openAuthModal('signin');
+      });
+
+      document.getElementById('navRegisterBtn')?.addEventListener('click', () => {
+        if (guestMenu) guestMenu.style.display = 'none';
+        openAuthModal('register');
+      });
+
+      document.getElementById('navGuestTrackBtn')?.addEventListener('click', () => {
+        if (guestMenu) guestMenu.style.display = 'none';
+        if (window.EiTohApp?.openOrderTracker) window.EiTohApp.openOrderTracker();
+      });
+
     } else {
       const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() : 'U';
-      const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'Account';
 
       container.innerHTML = `
         <div class="user-menu-wrapper" id="userMenuWrapper">
-          <button type="button" class="btn-user-pill" id="userMenuBtn" aria-expanded="false" title="My Account">
+          <button type="button" class="btn-header-action btn-icon-only btn-avatar-pill" id="userMenuBtn" aria-label="My Account" aria-haspopup="true" aria-expanded="false" title="${currentUser.name}">
             <span class="user-avatar-badge">${initials}</span>
-            <span class="user-name-text hide-mobile">${window.E ? window.E(firstName) : firstName}</span>
-            <i class="fa-solid fa-chevron-down chevron-icon"></i>
           </button>
 
           <div class="user-dropdown" id="userDropdown" style="display: none;">
@@ -67,6 +117,10 @@
               <button type="button" class="dropdown-item" id="navMyOrdersBtn">
                 <i class="fa-solid fa-box-archive"></i>
                 <span>My Orders</span>
+              </button>
+              <button type="button" class="dropdown-item" id="navUserTrackBtn">
+                <i class="fa-solid fa-route"></i>
+                <span>Track Your Order</span>
               </button>
               <button type="button" class="dropdown-item" id="navProfileBtn">
                 <i class="fa-solid fa-map-location-dot"></i>
@@ -99,10 +153,17 @@
       });
 
       document.addEventListener('click', () => {
-        if (menu) menu.style.display = 'none';
+        if (menu) {
+          menu.style.display = 'none';
+          btn?.setAttribute('aria-expanded', 'false');
+        }
       });
 
       document.getElementById('navMyOrdersBtn')?.addEventListener('click', () => openMyOrdersModal());
+      document.getElementById('navUserTrackBtn')?.addEventListener('click', () => {
+        if (menu) menu.style.display = 'none';
+        if (window.EiTohApp?.openOrderTracker) window.EiTohApp.openOrderTracker();
+      });
       document.getElementById('navProfileBtn')?.addEventListener('click', () => openProfileModal());
       document.getElementById('navLogoutBtn')?.addEventListener('click', () => {
         EiTohAPI.auth.logout();
