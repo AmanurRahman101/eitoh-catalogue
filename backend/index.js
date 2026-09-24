@@ -49,12 +49,16 @@ app.get('/api/categories', (req, res, next) => {
 });
 
 // Serve Frontend Static Files
-const staticRoot = path.join(__dirname, '..');
-app.use(express.static(staticRoot));
+const frontendDir = path.join(__dirname, '..', 'frontend');
+app.use(express.static(frontendDir));
 
-// Fallback to index.html for unknown frontend routes
+// Fallback to index.html for storefront & admin.html for CMS
 app.get('/', (req, res) => {
-  res.sendFile(path.join(staticRoot, 'index.html'));
+  res.sendFile(path.join(frontendDir, 'index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(frontendDir, 'admin.html'));
 });
 
 // Central Error Handler

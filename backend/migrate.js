@@ -67,8 +67,11 @@ async function migrate() {
       console.log(`👑 [EiToh DB Migration] Admin user ${adminEmail} already exists.`);
     }
 
-    // Step 5: Seed Categories & Products from data/products.json
-    const productsJsonPath = path.join(__dirname, '..', 'data', 'products.json');
+    // Step 5: Seed Categories & Products from frontend/data/products.json
+    let productsJsonPath = path.join(__dirname, '..', 'frontend', 'data', 'products.json');
+    if (!fs.existsSync(productsJsonPath)) {
+      productsJsonPath = path.join(__dirname, '..', 'data', 'products.json');
+    }
     if (fs.existsSync(productsJsonPath)) {
       const seedData = JSON.parse(fs.readFileSync(productsJsonPath, 'utf8'));
 

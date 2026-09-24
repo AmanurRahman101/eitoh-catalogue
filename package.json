@@ -2,11 +2,11 @@
   "name": "eitoh-catalogue",
   "version": "2.0.0",
   "description": "EiToh Studio - 3D Printing & Lithophanes Full-Stack E-Commerce & CMS",
-  "main": "server/index.js",
+  "main": "backend/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "node --watch server/index.js",
-    "migrate": "node server/migrate.js",
+    "start": "node backend/index.js",
+    "dev": "node --watch backend/index.js",
+    "migrate": "node backend/migrate.js",
     "test": "node scratch/test_api.js"
   },
   "keywords": [
