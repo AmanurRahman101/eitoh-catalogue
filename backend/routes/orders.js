@@ -216,7 +216,7 @@ router.post('/', optionalToken, async (req, res) => {
     console.error('Order creation error:', err);
     return res.status(500).json({
       success: false,
-      error: 'Failed to place order: ' + err.message
+      error: 'Failed to place order. Please review your order details and try again.'
     });
   } finally {
     conn.release();

@@ -867,8 +867,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
-    if (!phone || phone.length < 9) {
-      showToast('Please enter a valid Phone / WhatsApp number', 'warning');
+    const cleanPhone = (phone || '').replace(/[\s\-()]/g, '');
+    const bdPhoneRegex = /^(?:\+8801|01)[3-9]\d{8}$/;
+    if (!cleanPhone || !bdPhoneRegex.test(cleanPhone)) {
+      showToast('Please enter a valid Bangladeshi Phone / WhatsApp number (e.g. 017XXXXXXXX or +88017XXXXXXXX)', 'warning');
       elements.checkoutPhone?.focus();
       return false;
     }
@@ -889,7 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * 3. Clears customer's cart
    * 4. Transitions to Step 3 Confirmation with printable receipt & tracking ID
    */
-  function handlePlaceOrderOnline() {
+  async function handlePlaceOrderOnline() {
     if (!validateCheckoutForm()) return;
 
     const cart = StorageManager.getCart();
@@ -898,18 +900,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const orderData = buildOrderPayload('online');
-    const createdOrder = StorageManager.saveOrder(orderData);
-    state.lastPlacedOrder = createdOrder;
+    const btn = elements.btnPlaceOrderOnline;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Order...';
+    }
 
-    // Clear cart and show confirmation screen
-    StorageManager.clearCart();
-    updateCartUI();
-    renderOrderConfirmation(createdOrder);
-    setCheckoutStep(3);
+    try {
+      const orderData = buildOrderPayload('online');
+      const createdOrder = await StorageManager.saveOrder(orderData);
+      state.lastPlacedOrder = createdOrder;
 
-    showToast(`Order #${createdOrder.id} placed successfully! 🎉`);
-    announce(`Order placed successfully. Your order ID is ${createdOrder.id}`);
+      // Clear cart and show confirmation screen
+      StorageManager.clearCart();
+      updateCartUI();
+      renderOrderConfirmation(createdOrder);
+      setCheckoutStep(3);
+
+      showToast(`Order #${createdOrder.id} placed successfully! 🎉`);
+      announce(`Order placed successfully. Your order ID is ${createdOrder.id}`);
+    } catch (err) {
+      console.error('Order placement error:', err);
+      showToast('Failed to place order. Please try again.', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText || '<i class="fa-solid fa-bag-shopping"></i> Place Order (Cash on Delivery)';
+      }
+    }
   }
 
   /**
@@ -920,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * 4. Opens WhatsApp in new tab
    * 5. Clears customer cart and shows Confirmation screen
    */
-  function handleWhatsappCheckout() {
+  async function handleWhatsappCheckout() {
     if (!validateCheckoutForm()) return;
 
     const cart = StorageManager.getCart();
@@ -929,24 +948,41 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const orderData = buildOrderPayload('whatsapp');
-    const createdOrder = StorageManager.saveOrder(orderData);
-    state.lastPlacedOrder = createdOrder;
+    const btn = elements.btnWhatsappCheckout;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting WhatsApp...';
+    }
 
-    const settings = StorageManager.getSettings();
-    const waUrl = buildWhatsAppURL(settings.whatsappNumber || '8801777547605', createdOrder, settings);
+    try {
+      const orderData = buildOrderPayload('whatsapp');
+      const createdOrder = await StorageManager.saveOrder(orderData);
+      state.lastPlacedOrder = createdOrder;
 
-    // Open WhatsApp
-    window.open(waUrl, '_blank');
+      const settings = StorageManager.getSettings();
+      const waUrl = buildWhatsAppURL(settings.whatsappNumber || '8801777547605', createdOrder, settings);
 
-    // Clear cart and show confirmation
-    StorageManager.clearCart();
-    updateCartUI();
-    renderOrderConfirmation(createdOrder);
-    setCheckoutStep(3);
+      // Open WhatsApp
+      window.open(waUrl, '_blank');
 
-    showToast('Redirecting to WhatsApp with your order! 🚀');
-    announce(`Order saved! Redirecting to WhatsApp for order ${createdOrder.id}`);
+      // Clear cart and show confirmation
+      StorageManager.clearCart();
+      updateCartUI();
+      renderOrderConfirmation(createdOrder);
+      setCheckoutStep(3);
+
+      showToast('Redirecting to WhatsApp with your order! 🚀');
+      announce(`Order saved! Redirecting to WhatsApp for order ${createdOrder.id}`);
+    } catch (err) {
+      console.error('WhatsApp order placement error:', err);
+      showToast('Failed to process WhatsApp order. Please try again.', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText || '<i class="fa-brands fa-whatsapp"></i> Order via WhatsApp';
+      }
+    }
   }
 
   function buildOrderPayload(channel = 'online') {

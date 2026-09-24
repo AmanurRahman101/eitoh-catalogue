@@ -1,0 +1,346 @@
+{
+  "schemaChecks": [
+    {
+      "table": "users",
+      "status": "PASS",
+      "message": "Table `users` verified."
+    },
+    {
+      "table": "categories",
+      "status": "PASS",
+      "message": "Table `categories` verified."
+    },
+    {
+      "table": "products",
+      "status": "PASS",
+      "message": "Table `products` verified."
+    },
+    {
+      "table": "product_images",
+      "status": "PASS",
+      "message": "Table `product_images` verified."
+    },
+    {
+      "table": "orders",
+      "status": "PASS",
+      "message": "Table `orders` verified."
+    },
+    {
+      "table": "order_items",
+      "status": "PASS",
+      "message": "Table `order_items` verified."
+    },
+    {
+      "table": "order_timeline",
+      "status": "PASS",
+      "message": "Table `order_timeline` verified."
+    },
+    {
+      "table": "custom_quotes",
+      "status": "PASS",
+      "message": "Table `custom_quotes` verified."
+    },
+    {
+      "table": "coupons",
+      "status": "PASS",
+      "message": "Table `coupons` verified."
+    },
+    {
+      "table": "store_settings",
+      "status": "PASS",
+      "message": "Table `store_settings` verified."
+    },
+    {
+      "table": "categories",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "coupons",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "custom_quotes",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "orders",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "order_items",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "order_timeline",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "products",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "product_images",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "store_settings",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    },
+    {
+      "table": "users",
+      "status": "PASS",
+      "message": "Collation is utf8mb4_unicode_ci (UTF8mb4: true)"
+    }
+  ],
+  "indexCoverage": [
+    {
+      "table": "users",
+      "indexes": [
+        "PRIMARY",
+        "email",
+        "idx_users_email",
+        "idx_users_role"
+      ],
+      "count": 4
+    },
+    {
+      "table": "categories",
+      "indexes": [
+        "PRIMARY"
+      ],
+      "count": 1
+    },
+    {
+      "table": "products",
+      "indexes": [
+        "PRIMARY",
+        "idx_products_category",
+        "idx_products_featured"
+      ],
+      "count": 3
+    },
+    {
+      "table": "product_images",
+      "indexes": [
+        "PRIMARY",
+        "idx_images_product"
+      ],
+      "count": 2
+    },
+    {
+      "table": "orders",
+      "indexes": [
+        "PRIMARY",
+        "order_number",
+        "idx_orders_user",
+        "idx_orders_status",
+        "idx_orders_number",
+        "idx_orders_phone"
+      ],
+      "count": 6
+    },
+    {
+      "table": "order_items",
+      "indexes": [
+        "PRIMARY",
+        "idx_order_items_order",
+        "fk_order_items_product"
+      ],
+      "count": 3
+    },
+    {
+      "table": "order_timeline",
+      "indexes": [
+        "PRIMARY",
+        "idx_timeline_order"
+      ],
+      "count": 2
+    },
+    {
+      "table": "custom_quotes",
+      "indexes": [
+        "PRIMARY",
+        "quote_number",
+        "idx_quotes_user"
+      ],
+      "count": 3
+    },
+    {
+      "table": "coupons",
+      "indexes": [
+        "PRIMARY",
+        "code"
+      ],
+      "count": 2
+    },
+    {
+      "table": "store_settings",
+      "indexes": [
+        "PRIMARY"
+      ],
+      "count": 1
+    }
+  ],
+  "integrityChecks": [
+    {
+      "totalForeignKeys": 7,
+      "keys": [
+        "custom_quotes.user_id -> users.id",
+        "orders.user_id -> users.id",
+        "order_items.order_id -> orders.id",
+        "order_items.product_id -> products.id",
+        "order_timeline.order_id -> orders.id",
+        "products.category_id -> categories.id",
+        "product_images.product_id -> products.id"
+      ]
+    },
+    {
+      "check": "Orphaned order_items",
+      "status": "PASS",
+      "count": 0
+    },
+    {
+      "check": "Orphaned order_timeline",
+      "status": "PASS",
+      "count": 0
+    },
+    {
+      "column": "custom_quotes.est_price_bdt",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "orders.subtotal",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "orders.discount",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "orders.delivery_fee",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "orders.total_amount",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "order_items.unit_price",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "order_items.total_price",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "products.price",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    },
+    {
+      "column": "products.original_price",
+      "type": "decimal(10,2)",
+      "status": "PASS"
+    }
+  ],
+  "sqlInjectionAudit": [
+    {
+      "file": "backend/routes/admin.js",
+      "unsafeQueryCount": 0,
+      "status": "PASS",
+      "matches": []
+    },
+    {
+      "file": "backend/routes/auth.js",
+      "unsafeQueryCount": 0,
+      "status": "PASS",
+      "matches": []
+    },
+    {
+      "file": "backend/routes/orders.js",
+      "unsafeQueryCount": 0,
+      "status": "PASS",
+      "matches": []
+    },
+    {
+      "file": "backend/routes/products.js",
+      "unsafeQueryCount": 0,
+      "status": "PASS",
+      "matches": []
+    },
+    {
+      "file": "backend/routes/quotes.js",
+      "unsafeQueryCount": 0,
+      "status": "PASS",
+      "matches": []
+    }
+  ],
+  "rbacAudit": [
+    {
+      "user": "admin@eitoh.com",
+      "role": "admin",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "maker_1790193219326@example.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "maker_1790193256466@example.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "maker_1790193611970@example.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "tanvir_1790193657973@studio.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "maker_1790277500122@example.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    },
+    {
+      "user": "maker_1790278836124@example.com",
+      "role": "customer",
+      "isBcrypt": true,
+      "hashLength": 60,
+      "status": "PASS"
+    }
+  ],
+  "recommendations": []
+}

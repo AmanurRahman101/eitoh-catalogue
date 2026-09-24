@@ -217,6 +217,24 @@
         return;
       }
 
+      // Bangladeshi Phone Regex Validation
+      const cleanPhone = phone.replace(/[\s-]/g, '');
+      if (!/^(?:\+8801|01)[3-9]\d{8}$/.test(cleanPhone)) {
+        showAuthAlert('Please enter a valid 11-digit Bangladeshi phone number (e.g. 017XXXXXXXX).');
+        return;
+      }
+
+      // RFC Email Validation
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showAuthAlert('Please enter a valid email address (e.g. name@example.com).');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAuthAlert('Password must be at least 6 characters long.');
+        return;
+      }
+
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Creating Account...';
 
@@ -224,7 +242,7 @@
         const res = await EiTohAPI.auth.register({
           name,
           email,
-          phone,
+          phone: cleanPhone,
           password,
           address,
           city,
@@ -259,6 +277,8 @@
     const list = document.getElementById('myOrdersList');
     if (!modal || !list) return;
 
+    const E = window.EiTohUtils?.escapeHTML || (s => String(s || ''));
+
     modal.classList.add('active');
     list.innerHTML = `
       <div class="orders-loading-state">
@@ -290,23 +310,26 @@
           day: 'numeric'
         });
 
-        const statusClass = `badge-status-${order.order_status}`;
+        const safeStatus = E(order.order_status || 'confirmed');
+        const statusClass = `badge-status-${safeStatus.toLowerCase()}`;
         const itemsHtml = (order.items || []).map(it => `
           <div class="order-item-row">
-            <span class="order-item-title">${window.E ? window.E(it.product_title) : it.product_title} × ${it.quantity}</span>
-            <span class="order-item-price">৳${parseFloat(it.total_price).toLocaleString()}</span>
+            <span class="order-item-title">${E(it.product_title)} × ${Number(it.quantity || 1)}</span>
+            <span class="order-item-price">৳${parseFloat(it.total_price || 0).toLocaleString()}</span>
           </div>
         `).join('');
+
+        const safeOrderNum = E(order.order_number);
 
         return `
           <div class="customer-order-card">
             <div class="order-card-header">
               <div>
-                <span class="order-num-tag">${order.order_number}</span>
-                <span class="order-date-text"><i class="fa-regular fa-clock"></i> ${dateStr}</span>
+                <span class="order-num-tag">${safeOrderNum}</span>
+                <span class="order-date-text"><i class="fa-regular fa-clock"></i> ${E(dateStr)}</span>
               </div>
               <span class="order-status-pill ${statusClass}">
-                <span class="pulse-dot"></span> ${order.order_status.toUpperCase()}
+                <span class="pulse-dot"></span> ${safeStatus.toUpperCase()}
               </span>
             </div>
 
@@ -319,7 +342,7 @@
                 <span class="total-label">Total Amount:</span>
                 <span class="total-val">৳${parseFloat(order.total_amount).toLocaleString()}</span>
               </div>
-              <button type="button" class="btn-track-order-modal" onclick="window.EiTohAuth.trackOrder('${order.order_number}')">
+              <button type="button" class="btn-track-order-modal" onclick="window.EiTohAuth.trackOrder('${safeOrderNum}')">
                 <i class="fa-solid fa-route"></i> Track Live
               </button>
             </div>

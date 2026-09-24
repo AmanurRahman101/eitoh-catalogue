@@ -215,7 +215,7 @@ router.post('/admin', authenticateToken, requireAdmin, async (req, res) => {
     return res.status(201).json({ success: true, message: 'Product created successfully.', id });
   } catch (err) {
     console.error('Error creating product:', err);
-    return res.status(500).json({ success: false, error: 'Failed to create product: ' + err.message });
+    return res.status(500).json({ success: false, error: 'Failed to create product. Please verify fields and try again.' });
   }
 });
 
@@ -281,7 +281,7 @@ router.put('/admin/:id', authenticateToken, requireAdmin, async (req, res) => {
     return res.json({ success: true, message: 'Product updated successfully.' });
   } catch (err) {
     console.error('Error updating product:', err);
-    return res.status(500).json({ success: false, error: 'Failed to update product: ' + err.message });
+    return res.status(500).json({ success: false, error: 'Failed to update product. Please verify fields and try again.' });
   }
 });
 
