@@ -224,15 +224,21 @@
         </div>
 
         <div class="mobile-nav-group">
-          <span class="mobile-group-title">Services</span>
+          <span class="mobile-group-title">Services & Account</span>
           <a href="#estimatorSection" class="mobile-nav-link" id="mobileLinkEstimator">
             <i class="fa-solid fa-calculator"></i> <span>3D Print Estimator</span>
           </a>
           <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkCustomQuote">
             <i class="fa-solid fa-pen-ruler"></i> <span>Bespoke Custom Quote</span>
           </a>
+          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkWishlist">
+            <i class="fa-regular fa-heart"></i> <span>Saved Items (<span id="mobileWishlistCount">0</span>)</span>
+          </a>
           <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkTracker">
             <i class="fa-solid fa-route"></i> <span>Track Your Order</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-link" id="mobileLinkAccount">
+            <i class="fa-regular fa-user"></i> <span>My Account / Sign In</span>
           </a>
         </div>
       </div>
@@ -439,7 +445,12 @@
           <div class="filter-popover-panel" id="filterPopoverPanel" aria-hidden="true">
             <div class="filter-popover-header">
               <span class="filter-header-title"><i class="fa-solid fa-filter"></i> Filter Creations</span>
-              <button type="button" class="btn-clear-filters" id="btnClearFilters">Reset</button>
+              <div class="filter-header-actions">
+                <button type="button" class="btn-clear-filters" id="btnClearFilters">Reset</button>
+                <button type="button" class="btn-close-filter-sheet" id="btnCloseFilterSheet" aria-label="Close filters">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
             </div>
 
             <div class="filter-popover-group">
@@ -460,6 +471,12 @@
                 <button type="button" class="popover-tag-chip" data-tag="in_stock">In Stock Only</button>
               </div>
             </div>
+
+            <div class="filter-popover-footer">
+              <button type="button" class="btn-editorial-dark btn-apply-filters" id="btnApplyFilterSheet">
+                Apply Filters
+              </button>
+            </div>
           </div>
         </div>
 
@@ -479,6 +496,11 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Scrollable Category Pill Carousel for Instant Mobile & Desktop Filtering -->
+      <div class="category-pills-bar" id="categoryPillsBar" role="tablist" aria-label="Product Categories">
+        <!-- Dynamically rendered via app.js -->
       </div>
     </div>
   </section>
@@ -575,6 +597,9 @@
             </div>
             <button type="button" class="btn-modal-add-cart" id="btnModalAddToCart">
               <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+            </button>
+            <button type="button" class="btn-modal-buy-now" id="btnModalBuyNow">
+              <i class="fa-solid fa-bolt"></i> Buy Now
             </button>
             <button type="button" class="btn-modal-wishlist" id="btnModalWishlist" aria-label="Add to wishlist">
               <i class="fa-regular fa-heart" id="modalWishlistIcon"></i>
@@ -955,6 +980,32 @@
       </div>
     </div>
   </footer>
+
+  <!-- Mobile Sticky Bottom Navigation Dock (Thumb-friendly iOS/Android app style) -->
+  <nav class="mobile-bottom-dock" id="mobileBottomDock" aria-label="Mobile Navigation">
+    <button type="button" class="bottom-dock-btn active" id="dockBtnHome" aria-label="Home">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button type="button" class="bottom-dock-btn" id="dockBtnShop" aria-label="Creations">
+      <i class="fa-solid fa-cubes"></i>
+      <span>Shop</span>
+    </button>
+    <button type="button" class="bottom-dock-btn" id="dockBtnEstimator" aria-label="Estimator">
+      <i class="fa-solid fa-calculator"></i>
+      <span>Estimator</span>
+    </button>
+    <button type="button" class="bottom-dock-btn dock-badge-wrap" id="dockBtnWishlist" aria-label="Saved Items">
+      <i class="fa-regular fa-heart"></i>
+      <span class="dock-badge-pill" id="dockWishlistCount" style="display: none;">0</span>
+      <span>Saved</span>
+    </button>
+    <button type="button" class="bottom-dock-btn dock-badge-wrap" id="dockBtnCart" aria-label="Shopping Cart">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span class="dock-badge-pill" id="dockCartCount">0</span>
+      <span>Cart</span>
+    </button>
+  </nav>
 
   <!-- Scripts (Load Order: utils → api → data → auth → app) -->
   <script src="js/utils.js"></script>

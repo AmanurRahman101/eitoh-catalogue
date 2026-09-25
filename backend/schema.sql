@@ -1,8 +1,8 @@
 -- EiToh Studio MySQL Database Schema
 -- Database: eitoh_db
-
-CREATE DATABASE IF NOT EXISTS `eitoh_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `eitoh_db`;
+-- Database provisioning is handled dynamically by migrate.js
+-- CREATE DATABASE IF NOT EXISTS `eitoh_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE `eitoh_db`;
 
 -- 1. Users Table (Authentication & Customer Accounts)
 CREATE TABLE IF NOT EXISTS `users` (

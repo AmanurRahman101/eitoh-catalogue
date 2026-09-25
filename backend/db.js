@@ -23,7 +23,25 @@ let pool = null;
 
 function getPool() {
   if (!pool) {
-    pool = mysql.createPool(poolConfig);
+    const connUri = process.env.MYSQL_URL || process.env.DATABASE_URL;
+    if (connUri) {
+      pool = mysql.createPool({
+        uri: connUri,
+        waitForConnections: true,
+        connectionLimit: 15,
+        queueLimit: 0,
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 10000,
+        dateStrings: true,
+        ssl: process.env.DB_SSL === 'false' ? undefined : { rejectUnauthorized: false }
+      });
+    } else {
+      const config = {
+        ...poolConfig,
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+      };
+      pool = mysql.createPool(config);
+    }
   }
   return pool;
 }

@@ -88,6 +88,18 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileLinkEstimator: document.getElementById('mobileLinkEstimator'),
     mobileLinkCustomQuote: document.getElementById('mobileLinkCustomQuote'),
     mobileLinkTracker: document.getElementById('mobileLinkTracker'),
+    mobileLinkWishlist: document.getElementById('mobileLinkWishlist'),
+    mobileLinkAccount: document.getElementById('mobileLinkAccount'),
+    mobileWishlistCount: document.getElementById('mobileWishlistCount'),
+
+    // Mobile Bottom Dock References
+    dockBtnHome: document.getElementById('dockBtnHome'),
+    dockBtnShop: document.getElementById('dockBtnShop'),
+    dockBtnEstimator: document.getElementById('dockBtnEstimator'),
+    dockBtnWishlist: document.getElementById('dockBtnWishlist'),
+    dockBtnCart: document.getElementById('dockBtnCart'),
+    dockWishlistCount: document.getElementById('dockWishlistCount'),
+    dockCartCount: document.getElementById('dockCartCount'),
 
     // Hero
     heroShowcaseImg: document.getElementById('heroShowcaseImg'),
@@ -123,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sortSelect: document.getElementById('sortSelect'),
     productCountLabel: document.getElementById('productCountLabel'),
     productGrid: document.getElementById('productGrid'),
+    categoryPillsBar: document.getElementById('categoryPillsBar'),
 
     // Quick View Modal
     quickViewModal: document.getElementById('quickViewModal'),
@@ -146,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnModalDec: document.getElementById('btnModalDec'),
     btnModalInc: document.getElementById('btnModalInc'),
     btnModalAddToCart: document.getElementById('btnModalAddToCart'),
+    btnModalBuyNow: document.getElementById('btnModalBuyNow'),
     btnModalWishlist: document.getElementById('btnModalWishlist'),
     modalWishlistIcon: document.getElementById('modalWishlistIcon'),
 
@@ -301,25 +315,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const categories = StorageManager.getCategories();
     const products = StorageManager.getProducts();
 
-    if (!elements.popoverCategoryGrid) return;
+    if (elements.popoverCategoryGrid) {
+      let html = '';
+      categories.forEach(cat => {
+        const count = cat.id === 'all'
+          ? products.length
+          : products.filter(p => p.category === cat.id).length;
 
-    let html = '';
-    categories.forEach(cat => {
-      const count = cat.id === 'all'
-        ? products.length
-        : products.filter(p => p.category === cat.id).length;
+        const isActive = state.selectedCategory === cat.id ? 'active' : '';
 
-      const isActive = state.selectedCategory === cat.id ? 'active' : '';
+        html += `
+          <button type="button" class="popover-cat-btn ${isActive}" data-category="${E(cat.id)}">
+            <span><i class="fa-solid ${E(cat.icon || 'fa-cube')}" style="margin-right: 6px; font-size: 0.75rem;"></i> ${E(cat.name)}</span>
+            <span class="popover-cat-badge">(${count})</span>
+          </button>
+        `;
+      });
+      elements.popoverCategoryGrid.innerHTML = html;
+    }
 
-      html += `
-        <button type="button" class="popover-cat-btn ${isActive}" data-category="${E(cat.id)}">
-          <span><i class="fa-solid ${E(cat.icon || 'fa-cube')}" style="margin-right: 6px; font-size: 0.75rem;"></i> ${E(cat.name)}</span>
-          <span class="popover-cat-badge">(${count})</span>
-        </button>
-      `;
-    });
+    if (elements.categoryPillsBar) {
+      let pillsHtml = '';
+      categories.forEach(cat => {
+        const count = cat.id === 'all'
+          ? products.length
+          : products.filter(p => p.category === cat.id).length;
 
-    elements.popoverCategoryGrid.innerHTML = html;
+        const isActive = state.selectedCategory === cat.id ? 'active' : '';
+
+        pillsHtml += `
+          <button type="button" class="category-pill-btn ${isActive}" data-category="${E(cat.id)}" role="tab" aria-selected="${state.selectedCategory === cat.id}">
+            <i class="fa-solid ${E(cat.icon || 'fa-cube')}"></i>
+            <span>${E(cat.name)}</span>
+            <span class="pill-count">${count}</span>
+          </button>
+        `;
+      });
+      elements.categoryPillsBar.innerHTML = pillsHtml;
+
+      // Bind click handlers to pills
+      elements.categoryPillsBar.querySelectorAll('.category-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const catId = btn.getAttribute('data-category');
+          if (catId) {
+            state.selectedCategory = catId;
+            renderCategories();
+            renderActiveFilterChips();
+            renderProducts();
+          }
+        });
+      });
+    }
   }
 
   function renderActiveFilterChips() {
@@ -540,13 +586,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${p.originalPrice ? `<span class="card-orig-price">${StorageManager.formatPrice(p.originalPrice)}</span>` : ''}
               </div>
 
-              <button type="button" class="btn-add-cart" 
-                onclick="window.EiTohApp.quickAddToCart('${E(p.id)}', event)"
-                ${(!isStock && !isMadeToOrder) ? 'disabled' : ''} 
-                aria-label="Add ${E(p.title)} to cart">
-                <i class="fa-solid fa-bag-shopping"></i>
-                <span>Add</span>
-              </button>
+              <div class="card-actions-group">
+                <button type="button" class="btn-add-cart" 
+                  onclick="window.EiTohApp.quickAddToCart('${E(p.id)}', event)"
+                  ${(!isStock && !isMadeToOrder) ? 'disabled' : ''} 
+                  title="Add to Cart"
+                  aria-label="Add ${E(p.title)} to cart">
+                  <i class="fa-solid fa-bag-shopping"></i>
+                  <span>Add</span>
+                </button>
+                <button type="button" class="btn-buy-now" 
+                  onclick="window.EiTohApp.quickBuyNow('${E(p.id)}', event)"
+                  ${(!isStock && !isMadeToOrder) ? 'disabled' : ''} 
+                  title="Buy Now"
+                  aria-label="Buy ${E(p.title)} now">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>Buy Now</span>
+                </button>
+              </div>
             </div>
           </div>
         </article>
@@ -579,10 +636,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isStock = product.stockStatus === 'in_stock' || product.inStock === true;
     const isMadeToOrder = product.stockStatus === 'made_to_order';
+    const canOrder = isStock || isMadeToOrder;
     if (elements.modalStockBadge) {
       elements.modalStockBadge.textContent = isStock ? 'In Stock' : (isMadeToOrder ? 'Made to Order' : 'Out of Stock');
       elements.modalStockBadge.className = `modal-stock-badge ${isStock ? 'in-stock' : (isMadeToOrder ? 'pre-order' : 'out-of-stock')}`;
     }
+    if (elements.btnModalAddToCart) elements.btnModalAddToCart.disabled = !canOrder;
+    if (elements.btnModalBuyNow) elements.btnModalBuyNow.disabled = !canOrder;
     if (elements.modalTitle) elements.modalTitle.textContent = product.title;
     if (elements.modalBanglaTitle) {
       elements.modalBanglaTitle.textContent = product.banglaTitle || '';
@@ -751,10 +811,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cart = StorageManager.getCart();
     const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-    // Header badge
+    // Header & Mobile Dock badges
     if (elements.headerCartCount) {
       elements.headerCartCount.textContent = totalCount;
       elements.headerCartCount.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+    }
+    if (elements.dockCartCount) {
+      elements.dockCartCount.textContent = totalCount;
+      elements.dockCartCount.style.display = totalCount > 0 ? 'inline-flex' : 'none';
     }
     if (elements.drawerCartCount) elements.drawerCartCount.textContent = totalCount;
 
@@ -1537,6 +1601,13 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.wishlistCount.textContent = list.length;
       elements.wishlistCount.style.display = list.length > 0 ? 'inline-flex' : 'none';
     }
+    if (elements.dockWishlistCount) {
+      elements.dockWishlistCount.textContent = list.length;
+      elements.dockWishlistCount.style.display = list.length > 0 ? 'inline-flex' : 'none';
+    }
+    if (elements.mobileWishlistCount) {
+      elements.mobileWishlistCount.textContent = list.length;
+    }
   }
 
   function openWishlistModal() {
@@ -1565,8 +1636,11 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="mono-text" style="color: var(--primary); font-weight: 700;">${StorageManager.formatPrice(p.price)}</span>
             </div>
             <div class="wishlist-item-actions">
-              <button type="button" class="btn-editorial-dark btn-sm" onclick="window.EiTohApp.quickAddToCart('${E(p.id)}'); window.EiTohApp.closeWishlist();">
-                <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+              <button type="button" class="btn-editorial-dark btn-sm" onclick="window.EiTohApp.quickAddToCart('${E(p.id)}'); window.EiTohApp.closeWishlist();" title="Add to Cart">
+                <i class="fa-solid fa-bag-shopping"></i> Add
+              </button>
+              <button type="button" class="btn-editorial-accent btn-sm" onclick="window.EiTohApp.quickBuyNow('${E(p.id)}'); window.EiTohApp.closeWishlist();" title="Buy Now">
+                <i class="fa-solid fa-bolt"></i> Buy Now
               </button>
               <button type="button" class="btn-remove-wishlist" onclick="window.EiTohApp.toggleWishlist('${E(p.id)}'); window.EiTohApp.openWishlist();" title="Remove">
                 <i class="fa-solid fa-trash-can"></i>
@@ -1751,7 +1825,67 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 150));
     }
 
-    // Nav Links ScrollSpy Indicator (Shop & Estimator)
+    if (elements.mobileLinkWishlist) {
+      elements.mobileLinkWishlist.addEventListener('click', () => {
+        closeMobileNav();
+        openWishlistModal();
+      });
+    }
+    if (elements.mobileLinkAccount) {
+      elements.mobileLinkAccount.addEventListener('click', () => {
+        closeMobileNav();
+        if (window.EiTohAuth && window.EiTohAuth.openAuthModal) {
+          window.EiTohAuth.openAuthModal();
+        } else {
+          const authBtn = document.getElementById('guestMenuBtn') || document.getElementById('userMenuTrigger');
+          authBtn?.click();
+        }
+      });
+    }
+
+    // Mobile Bottom Navigation Dock Handlers
+    function setActiveDockBtn(activeId) {
+      document.querySelectorAll('.bottom-dock-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(activeId);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    if (elements.dockBtnHome) {
+      elements.dockBtnHome.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveDockBtn('dockBtnHome');
+      });
+    }
+    if (elements.dockBtnShop) {
+      elements.dockBtnShop.addEventListener('click', () => {
+        const catSection = document.getElementById('catalogSection');
+        if (catSection) {
+          catSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        setActiveDockBtn('dockBtnShop');
+      });
+    }
+    if (elements.dockBtnEstimator) {
+      elements.dockBtnEstimator.addEventListener('click', () => {
+        const estSection = document.getElementById('estimatorSection');
+        if (estSection) {
+          estSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        setActiveDockBtn('dockBtnEstimator');
+      });
+    }
+    if (elements.dockBtnWishlist) {
+      elements.dockBtnWishlist.addEventListener('click', () => {
+        openWishlistModal();
+      });
+    }
+    if (elements.dockBtnCart) {
+      elements.dockBtnCart.addEventListener('click', () => {
+        openCart();
+      });
+    }
+
+    // Nav Links & Bottom Dock ScrollSpy Indicator
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY + 140;
       const catalogEl = document.getElementById('catalogSection');
@@ -1762,6 +1896,8 @@ document.addEventListener('DOMContentLoaded', () => {
         activeId = 'estimatorSection';
       } else if (catalogEl && scrollY >= catalogEl.offsetTop) {
         activeId = 'catalogSection';
+      } else if (window.scrollY < 200) {
+        activeId = 'home';
       }
 
       if (elements.btnShopDropdown) {
@@ -1777,6 +1913,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           elements.navEstimatorLink.classList.remove('active');
         }
+      }
+
+      // Update bottom dock active state
+      if (activeId === 'home') {
+        setActiveDockBtn('dockBtnHome');
+      } else if (activeId === 'catalogSection') {
+        setActiveDockBtn('dockBtnShop');
+      } else if (activeId === 'estimatorSection') {
+        setActiveDockBtn('dockBtnEstimator');
       }
     }, { passive: true });
 
@@ -1820,6 +1965,22 @@ document.addEventListener('DOMContentLoaded', () => {
           elements.filterPopoverPanel?.classList.add('open');
           elements.btnFilterTrigger.setAttribute('aria-expanded', 'true');
         }
+      });
+    }
+
+    const btnCloseFilterSheet = document.getElementById('btnCloseFilterSheet');
+    if (btnCloseFilterSheet) {
+      btnCloseFilterSheet.addEventListener('click', () => {
+        elements.filterPopoverPanel?.classList.remove('open');
+        elements.btnFilterTrigger?.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    const btnApplyFilterSheet = document.getElementById('btnApplyFilterSheet');
+    if (btnApplyFilterSheet) {
+      btnApplyFilterSheet.addEventListener('click', () => {
+        elements.filterPopoverPanel?.classList.remove('open');
+        elements.btnFilterTrigger?.setAttribute('aria-expanded', 'false');
       });
     }
 
@@ -1978,6 +2139,24 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    if (elements.btnModalBuyNow) {
+      elements.btnModalBuyNow.addEventListener('click', () => {
+        if (!state.modalProduct) return;
+        const isStock = state.modalProduct.stockStatus === 'in_stock' || state.modalProduct.inStock === true;
+        const isMadeToOrder = state.modalProduct.stockStatus === 'made_to_order';
+        if (!isStock && !isMadeToOrder) {
+          showToast(`Sorry, ${state.modalProduct.title} is currently out of stock.`);
+          return;
+        }
+        StorageManager.addToCart(state.modalProduct, state.modalQty, state.modalSelectedColor);
+        updateCartUI();
+        closeQuickView();
+        showToast(`Proceeding to checkout for ${state.modalProduct.title} ⚡`);
+        openCartDrawer();
+        setCheckoutStep(2);
+      });
+    }
+
     if (elements.btnModalWishlist) {
       elements.btnModalWishlist.addEventListener('click', () => {
         if (!state.modalProduct) return;
@@ -2101,6 +2280,25 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartUI();
         showToast(`Added ${product.title} to cart! 🛍️`);
       }
+    },
+    quickBuyNow: (productId, event) => {
+      if (event) event.stopPropagation();
+      const product = StorageManager.getProductById(productId);
+      if (!product) return;
+      const isStock = product.stockStatus === 'in_stock' || product.inStock === true;
+      const isMadeToOrder = product.stockStatus === 'made_to_order';
+      if (!isStock && !isMadeToOrder) {
+        showToast(`Sorry, ${product.title} is currently out of stock.`);
+        return;
+      }
+      StorageManager.addToCart(product, 1, product.colors ? product.colors[0] : null);
+      updateCartUI();
+      showToast(`Proceeding to checkout for ${product.title} ⚡`);
+      openCartDrawer();
+      setCheckoutStep(2);
+    },
+    buyNow: (productId, event) => {
+      window.EiTohApp.quickBuyNow(productId, event);
     },
     changeCartQty: (cartItemId, newQty) => {
       if (newQty <= 0) {

@@ -11,38 +11,54 @@ const bcrypt = require('bcryptjs');
 async function migrate() {
   console.log('🚀 [EiToh DB Migration] Starting database provisioning...');
 
-  const host = process.env.DB_HOST || 'localhost';
-  const user = process.env.DB_USER || 'root';
-  const password = process.env.DB_PASSWORD || '';
-  const port = parseInt(process.env.DB_PORT || '3306', 10);
-  const dbName = process.env.DB_NAME || 'eitoh_db';
+  const connUri = process.env.MYSQL_URL || process.env.DATABASE_URL;
+  let db;
 
-  // Step 1: Connect to server and create database if missing
-  let serverConn;
-  try {
-    serverConn = await mysql.createConnection({ host, user, password, port });
-    await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
-    console.log(`✅ [EiToh DB Migration] Database \`${dbName}\` confirmed.`);
-    await serverConn.end();
-  } catch (err) {
-    console.error('❌ [EiToh DB Migration] Failed to connect to MySQL server:', err.message);
-    process.exit(1);
+  if (connUri) {
+    console.log('🔗 [EiToh DB Migration] Connecting via connection URI (MYSQL_URL / DATABASE_URL)...');
+    db = await mysql.createConnection({
+      uri: connUri,
+      multipleStatements: true,
+      ssl: process.env.DB_SSL === 'false' ? undefined : { rejectUnauthorized: false }
+    });
+    console.log('✅ [EiToh DB Migration] Connected to database.');
+  } else {
+    const host = process.env.DB_HOST || 'localhost';
+    const user = process.env.DB_USER || 'root';
+    const password = process.env.DB_PASSWORD || '';
+    const port = parseInt(process.env.DB_PORT || '3306', 10);
+    const dbName = process.env.DB_NAME || 'eitoh_db';
+    const ssl = process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined;
+
+    // Step 1: Connect to server and create database if missing (local or root environments)
+    try {
+      const serverConn = await mysql.createConnection({ host, user, password, port, ssl });
+      await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
+      console.log(`✅ [EiToh DB Migration] Database \`${dbName}\` confirmed.`);
+      await serverConn.end();
+    } catch (err) {
+      console.warn(`⚠️ [EiToh DB Migration] Notice: CREATE DATABASE skipped (${err.message}). Connecting directly to database '${dbName}'...`);
+    }
+
+    // Step 2: Connect directly to the database with multipleStatements enabled
+    db = await mysql.createConnection({
+      host,
+      user,
+      password,
+      port,
+      database: dbName,
+      multipleStatements: true,
+      ssl
+    });
   }
-
-  // Step 2: Connect directly to the database with multipleStatements enabled
-  const db = await mysql.createConnection({
-    host,
-    user,
-    password,
-    port,
-    database: dbName,
-    multipleStatements: true
-  });
 
   try {
     // Step 3: Read schema.sql and execute
     const schemaPath = path.join(__dirname, 'schema.sql');
-    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+    const rawSql = fs.readFileSync(schemaPath, 'utf8');
+    const schemaSql = rawSql
+      .replace(/CREATE DATABASE IF NOT EXISTS [^;]+;/gi, '')
+      .replace(/USE `?[^;`]+`?;/gi, '');
 
     console.log('📦 [EiToh DB Migration] Executing schema.sql DDL statements...');
     await db.query(schemaSql);
